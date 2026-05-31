@@ -59,9 +59,6 @@ lb config \
   --firmware-binary true \
   --firmware-chroot true \
   --bootappend-live "boot=live components username=chanx hostname=chanxos quiet splash"
-  --mirror-bootstrap "http://deb.debian.org/debian/" \
-  --mirror-chroot "http://deb.debian.org/debian/" \
-  --mirror-binary "http://deb.debian.org/debian/" \
   --updates true \
   --security false \
 

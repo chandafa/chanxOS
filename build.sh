@@ -50,8 +50,46 @@ lb config       --mode debian       --distribution "${DISTRO}"       --architect
 echo "==> Mulai build ISO. Proses ini bisa lama dan butuh internet stabil."
 ${SUDO} lb build 2>&1 | tee chanxos-build.log
 
-if [[ -f "live-image-${ARCH}.hybrid.iso" ]]; then
-  mv "live-image-${ARCH}.hybrid.iso" "${ISO_NAME}"
+echo "==> Mencari output ISO dari live-build..."
+mapfile -t ISO_CANDIDATES < <(
+  find . -maxdepth 2 -type f \( -name "*.iso" -o -name "*.hybrid.iso" \) -printf "%P\n" | sort
+)
+
+if [[ "${#ISO_CANDIDATES[@]}" -gt 0 ]]; then
+  printf "    kandidat ISO: %s\n" "${ISO_CANDIDATES[@]}"
+else
+  echo "    tidak ada kandidat ISO yang ditemukan"
+fi
+
+if [[ ! -f "${ISO_NAME}" ]]; then
+  SELECTED_ISO=""
+  PREFERRED_ISO_NAMES=(
+    "live-image-${ARCH}.hybrid.iso"
+    "chanxOS-${ARCH}.hybrid.iso"
+    "chanxOS.hybrid.iso"
+    "binary.hybrid.iso"
+  )
+
+  for candidate in "${PREFERRED_ISO_NAMES[@]}"; do
+    if [[ -f "$candidate" ]]; then
+      SELECTED_ISO="$candidate"
+      break
+    fi
+  done
+
+  if [[ -z "$SELECTED_ISO" ]]; then
+    for candidate in "${ISO_CANDIDATES[@]}"; do
+      if [[ "$candidate" != "${ISO_NAME}" ]]; then
+        SELECTED_ISO="$candidate"
+        break
+      fi
+    done
+  fi
+
+  if [[ -n "$SELECTED_ISO" && -f "$SELECTED_ISO" ]]; then
+    echo "==> Menggunakan output ISO: ${SELECTED_ISO}"
+    mv "$SELECTED_ISO" "${ISO_NAME}"
+  fi
 fi
 
 if [[ -f "${ISO_NAME}" ]]; then

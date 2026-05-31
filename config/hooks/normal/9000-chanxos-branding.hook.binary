@@ -1,8 +1,15 @@
 #!/bin/sh
 set -e
-if [ -f binary/isolinux/menu.cfg ]; then
-  sed -i 's/Debian GNU\/Linux/chanxOS/g; s/Live system/Live chanxOS/g; s/fail-safe mode/safe graphics/g; s/Start installer/Install chanxOS/g' binary/isolinux/menu.cfg || true
-fi
-if [ -f binary/boot/grub/grub.cfg ]; then
-  sed -i 's/Debian GNU\/Linux/chanxOS/g; s/Live system/Live chanxOS/g; s/fail-safe mode/safe graphics/g; s/Start installer/Install chanxOS/g' binary/boot/grub/grub.cfg || true
-fi
+
+patch_file() {
+  file="$1"
+  [ -f "$file" ] || return 0
+  sed -i 's/Debian GNU\/Linux/chanxOS/g' "$file" || true
+  sed -i 's/Live system/Live chanxOS/g' "$file" || true
+  sed -i 's/fail-safe mode/safe graphics/g' "$file" || true
+  sed -i 's/Start installer/Install chanxOS/g' "$file" || true
+}
+
+patch_file binary/isolinux/menu.cfg
+patch_file binary/isolinux/isolinux.cfg
+patch_file binary/boot/grub/grub.cfg

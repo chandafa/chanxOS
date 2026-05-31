@@ -13,6 +13,18 @@ managed=true
 CFG
 
 mkdir -p /etc/lightdm
+cat > /etc/lightdm/lightdm.conf <<'CFG'
+[LightDM]
+run-directory=/run/lightdm
+
+[Seat:*]
+greeter-session=lightdm-gtk-greeter
+user-session=xfce
+autologin-user=chanx
+autologin-user-timeout=0
+allow-guest=false
+CFG
+
 cat > /etc/lightdm/lightdm-gtk-greeter.conf <<'CFG'
 [greeter]
 background=/usr/share/backgrounds/chanxos/lockscreen.png
@@ -35,6 +47,12 @@ gtk-icon-theme-name=Papirus
 gtk-font-name=Inter 10
 gtk-cursor-theme-name=Adwaita
 CFG
+
+mkdir -p /etc/skel/.config/xfce4
+cat > /etc/skel/.xsession <<'CFG'
+exec startxfce4
+CFG
+chmod +x /etc/skel/.xsession || true
 
 cat > /etc/profile.d/chanxos.sh <<'CFG'
 alias cupdate='chanx-update'

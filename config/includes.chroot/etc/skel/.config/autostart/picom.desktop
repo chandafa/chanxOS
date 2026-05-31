@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=Picom
-Exec=sh -lc 'picom --config "$HOME/.config/picom/picom.conf"'
+Exec=sh -lc 'sleep 2; picom --config "$HOME/.config/picom/picom.conf" || true'
 X-GNOME-Autostart-enabled=true
+OnlyShowIn=XFCE;
 Terminal=false

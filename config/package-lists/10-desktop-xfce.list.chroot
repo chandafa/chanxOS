@@ -1,4 +1,17 @@
+xorg
+xserver-xorg
+xserver-xorg-video-all
+xserver-xorg-input-all
+dbus-x11
+desktop-base
 xfce4
+xfce4-session
+xfce4-panel
+xfdesktop4
+xfwm4
+xfce4-settings
+xfce4-terminal
+thunar
 lightdm
 lightdm-gtk-greeter
 network-manager-gnome

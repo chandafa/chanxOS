@@ -45,7 +45,31 @@ rm -rf binary cache chroot .build || true
 rm -f ./*.iso ./*.img ./*.list ./*.packages ./*.buildlog chanxos-build.log SHA256SUMS binary.modified_timestamps chroot.files chroot.packages.install chroot.packages.live || true
 
 echo "==> Menyiapkan konfigurasi live-build..."
-lb config       --mode debian       --distribution "${DISTRO}"       --architectures "${ARCH}"       --archive-areas "main contrib non-free non-free-firmware"       --binary-images iso-hybrid       --debian-installer live       --apt-recommends false       --apt-options "--yes -o Acquire::Retries=5 -o Acquire::http::No-Cache=true -o Acquire::https::No-Cache=true"       --mirror-bootstrap "http://ftp.debian.org/debian/"       --mirror-chroot "http://ftp.debian.org/debian/"       --mirror-binary "http://ftp.debian.org/debian/"       --firmware-binary true       --firmware-chroot true       --security false       --iso-application "chanxOS"       --iso-publisher "chanxOS Project"       --iso-volume "chanxOS 0.1 Alpha"       --mksquashfs-options "-comp xz -b 1M -Xdict-size 100%"       --bootappend-live "boot=live components username=chanx hostname=chanxos quiet splash"
+# Tulis opsi mksquashfs ke config/chroot (tidak didukung oleh lb config langsung)
+mkdir -p config
+cat > config/chroot <<'EOF'
+LB_COMPRESSION="xz"
+EOF
+
+lb config \
+  --mode debian \
+  --distribution "${DISTRO}" \
+  --architectures "${ARCH}" \
+  --archive-areas "main contrib non-free non-free-firmware" \
+  --binary-images iso-hybrid \
+  --debian-installer live \
+  --apt-recommends false \
+  --apt-options "--yes -o Acquire::Retries=5 -o Acquire::http::No-Cache=true -o Acquire::https::No-Cache=true" \
+  --mirror-bootstrap "http://ftp.debian.org/debian/" \
+  --mirror-chroot "http://ftp.debian.org/debian/" \
+  --mirror-binary "http://ftp.debian.org/debian/" \
+  --firmware-binary true \
+  --firmware-chroot true \
+  --security false \
+  --iso-application "chanxOS" \
+  --iso-publisher "chanxOS Project" \
+  --iso-volume "chanxOS 0.1 Alpha" \
+  --bootappend-live "boot=live components username=chanx hostname=chanxos quiet splash"
 
 echo "==> Mulai build ISO. Proses ini bisa lama dan butuh internet stabil."
 ${SUDO} lb build 2>&1 | tee chanxos-build.log

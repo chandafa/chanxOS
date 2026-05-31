@@ -1,17 +1,123 @@
-logo.image = Image("logo.png");
-logo.sprite = Sprite(logo.image);
+# chanxOS Plymouth Boot Splash
+# =============================
+# Full animated boot screen with logo, progress bar, and status message
+
+# ── Window / Background ──────────────────────────────────────────────────────
+Window.SetBackgroundTopColor(0.04, 0.07, 0.14);
+Window.SetBackgroundBottomColor(0.06, 0.18, 0.30);
+
+# ── Logo ─────────────────────────────────────────────────────────────────────
+logo.image  = Image("chanxos-logo.png");
+logo.scaled = logo.image.Scale(logo.image.GetWidth() * 0.55, logo.image.GetHeight() * 0.55);
+logo.sprite = Sprite(logo.scaled);
 logo.sprite.SetZ(10);
 
-fun chanx_refresh () {
-  w = Window.GetWidth();
-  h = Window.GetHeight();
-  Window.SetBackgroundTopColor(0.05, 0.10, 0.16);
-  Window.SetBackgroundBottomColor(0.10, 0.32, 0.49);
-  logo_w = logo.image.GetWidth();
-  logo_h = logo.image.GetHeight();
-  logo.sprite.SetX((w / 2) - (logo_w / 2));
-  logo.sprite.SetY((h / 2) - (logo_h / 2) - 16);
+# ── Progress Bar (outer container) ───────────────────────────────────────────
+bar_width   = 320;
+bar_height  = 6;
+
+bar_bg_image = Image.New(bar_width, bar_height);
+bar_bg_image.FillWith(0.15, 0.30, 0.45, 0.60);    # semi-transparent track
+bar_bg       = Sprite(bar_bg_image);
+bar_bg.SetZ(10);
+
+# ── Progress Bar (fill) ──────────────────────────────────────────────────────
+bar_fill_image = Image.New(1, bar_height);
+bar_fill_image.FillWith(0.10, 0.80, 0.95, 1.0);   # cyan accent
+bar_fill = Sprite(bar_fill_image);
+bar_fill.SetZ(11);
+
+# ── Status / Message Text ────────────────────────────────────────────────────
+msg_image  = Image.New(400, 24);
+msg_sprite = Sprite(msg_image);
+msg_sprite.SetZ(12);
+
+# ── Dot Spinner ──────────────────────────────────────────────────────────────
+num_dots   = 5;
+dot_size   = 8;
+dot_gap    = 16;
+dot_list   = [];
+for (i = 0; i < num_dots; i++) {
+  d.image  = Image.New(dot_size, dot_size);
+  d.image.FillWith(0.10, 0.78, 0.95, 0.4);
+  d.sprite = Sprite(d.image);
+  d.sprite.SetZ(13);
+  dot_list[i] = d;
 }
 
-Plymouth.SetRefreshFunction(chanx_refresh);
-chanx_refresh();
+# ── Internal state ───────────────────────────────────────────────────────────
+progress      = 0.0;
+frame_counter = 0;
+
+# ── Layout helper (called on every frame) ────────────────────────────────────
+fun update_layout() {
+  w = Window.GetWidth();
+  h = Window.GetHeight();
+
+  # Logo — centered, slightly above middle
+  lw = logo.scaled.GetWidth();
+  lh = logo.scaled.GetHeight();
+  logo.sprite.SetX((w - lw) / 2);
+  logo.sprite.SetY((h / 2) - lh - 60);
+
+  # Progress bar — centered, below logo
+  bar_x = (w - bar_width) / 2;
+  bar_y = (h / 2) + 20;
+  bar_bg.SetX(bar_x);
+  bar_bg.SetY(bar_y);
+
+  fill_w = Math.Int(bar_width * progress);
+  if (fill_w < 2) { fill_w = 2; }
+  bar_fill.SetOpacity(1);
+  bar_fill.SetX(bar_x);
+  bar_fill.SetY(bar_y);
+  bar_fill.SetScale(fill_w, 1);
+
+  # Dot spinner — centered below progress bar
+  total_dots_w = num_dots * dot_size + (num_dots - 1) * (dot_gap - dot_size);
+  dot_start_x  = (w - total_dots_w) / 2;
+  dot_y        = bar_y + 22;
+  for (i = 0; i < num_dots; i++) {
+    dot_list[i].sprite.SetX(dot_start_x + i * dot_gap);
+    dot_list[i].sprite.SetY(dot_y);
+  }
+
+  # Status message — centered below dots
+  msg_sprite.SetX((w - 400) / 2);
+  msg_sprite.SetY(dot_y + 28);
+}
+
+# ── Refresh (called ~30 fps) ──────────────────────────────────────────────────
+fun refresh_callback() {
+  frame_counter++;
+
+  # Animate dot brightness in a wave pattern
+  for (i = 0; i < num_dots; i++) {
+    wave = Math.Sin((frame_counter * 0.15) - (i * 0.8));
+    alpha = 0.25 + (wave + 1.0) * 0.37;
+    dot_list[i].sprite.SetOpacity(alpha);
+  }
+
+  # Slowly pulse logo opacity
+  pulse = 0.80 + Math.Sin(frame_counter * 0.05) * 0.10;
+  logo.sprite.SetOpacity(pulse);
+
+  update_layout();
+}
+Plymouth.SetRefreshFunction(refresh_callback);
+
+# ── Boot progress event ───────────────────────────────────────────────────────
+fun boot_progress_callback(duration, percent) {
+  progress = percent;
+}
+Plymouth.SetBootProgressFunction(boot_progress_callback);
+
+# ── Message display ───────────────────────────────────────────────────────────
+fun message_callback(text) {
+  my_image = Image.Text(text, 0.70, 0.82, 0.90, 1.0, "monospace 9");
+  msg_sprite.SetImage(my_image);
+}
+Plymouth.SetMessageFunction(message_callback);
+
+# ── Initial layout ────────────────────────────────────────────────────────────
+update_layout();

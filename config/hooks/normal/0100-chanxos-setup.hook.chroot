@@ -61,9 +61,26 @@ alias cdev='chanx-devpack'
 alias cinstall='chanx-install'
 CFG
 
-if command -v plymouth-set-default-theme >/dev/null 2>&1; then
-  plymouth-set-default-theme chanxos || true
-  command -v update-initramfs >/dev/null 2>&1 && update-initramfs -u || true
+# Setup Plymouth theme chanxOS
+if [ -d /usr/share/plymouth/themes/chanxos ]; then
+  # Pastikan file logo.png ada (alias ke chanxos-logo.png)
+  if [ ! -f /usr/share/plymouth/themes/chanxos/logo.png ] && \
+     [ -f /usr/share/plymouth/themes/chanxos/chanxos-logo.png ]; then
+    cp /usr/share/plymouth/themes/chanxos/chanxos-logo.png \
+       /usr/share/plymouth/themes/chanxos/logo.png
+  fi
+
+  if command -v plymouth-set-default-theme >/dev/null 2>&1; then
+    plymouth-set-default-theme chanxos || true
+  elif [ -f /etc/alternatives/default.plymouth ]; then
+    ln -sf /usr/share/plymouth/themes/chanxos/chanxos.plymouth \
+      /etc/alternatives/default.plymouth || true
+  fi
+
+  # Rebuild initramfs agar plymouth termuat saat boot
+  if command -v update-initramfs >/dev/null 2>&1; then
+    update-initramfs -u 2>/dev/null || true
+  fi
 fi
 
 if [ -f /usr/share/applications/install-debian.desktop ]; then

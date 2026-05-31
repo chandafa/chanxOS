@@ -1,17 +1,58 @@
 #!/usr/bin/env bash
+# chanxOS System Information
 set -euo pipefail
-echo "========================================"
-echo "             chanxOS 0.1 Alpha          "
-echo "========================================"
-echo "Name       : chanxOS"
-echo "Base       : chanxOS Core"
-echo "Desktop    : XFCE • ChanxGlass"
-echo "Purpose    : Learning, Coding, Productivity"
-echo "Version    : 0.1 Alpha"
-echo "Codename   : Glass Fox"
-echo "========================================"
-echo "Kernel     : $(uname -r)"
-echo "Hostname   : $(hostname)"
-echo "User       : $(whoami)"
-echo "Shell      : ${SHELL:-unknown}"
-echo "========================================"
+
+# Colors
+CYAN='\033[0;36m'
+BCYAN='\033[1;36m'
+WHITE='\033[1;37m'
+GREY='\033[0;37m'
+RESET='\033[0m'
+DIM='\033[2m'
+
+KERNEL="$(uname -r)"
+HOSTNAME="$(hostname)"
+USER_NAME="$(whoami)"
+SHELL_NAME="${SHELL##*/}"
+UPTIME="$(uptime -p 2>/dev/null | sed 's/up //' || uptime | awk '{print $3}' | tr -d ',')"
+PACKAGES="$(dpkg -l 2>/dev/null | grep -c '^ii' || echo 'N/A')"
+RAM_INFO="$(free -h | awk '/^Mem:/{print $3 " / " $2}')"
+DISK_INFO="$(df -h / 2>/dev/null | awk 'NR==2{print $3 " / " $2 " (" $5 " used)"}')"
+CPU_INFO="$(grep 'model name' /proc/cpuinfo 2>/dev/null | head -1 | cut -d: -f2 | xargs || echo 'N/A')"
+RESOLUTION="$(xrandr 2>/dev/null | grep '*' | head -1 | awk '{print $1}' || echo 'N/A')"
+DE="XFCE 4 + ChanxGlass"
+WM="XFWM4 + Picom"
+THEME="ChanxGlass (Liquid Glass)"
+ICONS="Papirus"
+TERM="${TERM:-xfce4-terminal}"
+
+echo ""
+echo -e "  ${BCYAN}   ██████╗██╗  ██╗ █████╗ ███╗  ██╗██╗  ██╗${RESET}"
+echo -e "  ${BCYAN}  ██╔════╝██║  ██║██╔══██╗████╗ ██║╚██╗██╔╝${RESET}"
+echo -e "  ${BCYAN}  ██║     ███████║███████║██╔██╗██║ ╚███╔╝ ${RESET}"
+echo -e "  ${BCYAN}  ██║     ██╔══██║██╔══██║██║╚████║ ██╔██╗ ${RESET}"
+echo -e "  ${BCYAN}  ╚██████╗██║  ██║██║  ██║██║ ╚███║██╔╝╚██╗${RESET}"
+echo -e "  ${BCYAN}   ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚══╝╚═╝  ╚═╝${RESET}"
+echo ""
+echo -e "  ${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
+printf "  ${BCYAN}%-14s${RESET} %s\n" "Version"     "chanxOS 0.1 Alpha (Glass Fox)"
+printf "  ${BCYAN}%-14s${RESET} %s\n" "Base"        "Debian 12 Bookworm"
+printf "  ${BCYAN}%-14s${RESET} %s\n" "Kernel"      "$KERNEL"
+printf "  ${BCYAN}%-14s${RESET} %s\n" "Hostname"    "$HOSTNAME"
+printf "  ${BCYAN}%-14s${RESET} %s\n" "User"        "$USER_NAME"
+printf "  ${BCYAN}%-14s${RESET} %s\n" "Shell"       "$SHELL_NAME"
+printf "  ${BCYAN}%-14s${RESET} %s\n" "Uptime"      "$UPTIME"
+printf "  ${BCYAN}%-14s${RESET} %s\n" "Packages"    "$PACKAGES (dpkg)"
+echo -e "  ${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
+printf "  ${CYAN}%-14s${RESET} %s\n"  "DE"          "$DE"
+printf "  ${CYAN}%-14s${RESET} %s\n"  "WM"          "$WM"
+printf "  ${CYAN}%-14s${RESET} %s\n"  "Theme"       "$THEME"
+printf "  ${CYAN}%-14s${RESET} %s\n"  "Icons"       "$ICONS"
+printf "  ${CYAN}%-14s${RESET} %s\n"  "Terminal"    "$TERM"
+printf "  ${CYAN}%-14s${RESET} %s\n"  "Resolution"  "$RESOLUTION"
+echo -e "  ${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
+printf "  ${GREY}%-14s${RESET} %s\n"  "CPU"         "$CPU_INFO"
+printf "  ${GREY}%-14s${RESET} %s\n"  "Memory"      "$RAM_INFO"
+printf "  ${GREY}%-14s${RESET} %s\n"  "Disk (/)"    "$DISK_INFO"
+echo -e "  ${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
+echo ""

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=chanxOS Glass Manager
+Comment=Atur level efek liquid glass
+Exec=chanx-glass
+Icon=chanxos-settings
+Terminal=false
+Categories=System;Settings;

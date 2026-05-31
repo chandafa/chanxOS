@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+# chanxOS Glass Manager — Fitur Unik chanxOS
+# Toggle level efek liquid glass (blur, opacity, shadow)
+# Pembeda utama dari OS lain!
+set -euo pipefail
+
+PICOM_CONF="${HOME}/.config/picom/picom.conf"
+PICOM_SAFE="${HOME}/.config/picom/picom-safe.conf"
+STATE_FILE="${HOME}/.config/chanxos/glass-level"
+
+mkdir -p "${HOME}/.config/chanxos"
+
+get_level() {
+  cat "$STATE_FILE" 2>/dev/null || echo "2"
+}
+
+apply_level() {
+  local level="$1"
+  echo "$level" > "$STATE_FILE"
+
+  # Kill existing compositor
+  pkill -x picom 2>/dev/null || true
+  sleep 0.3
+
+  case "$level" in
+    0) # Off — no compositor
+      echo "Glass Level: OFF (no compositor)"
+      ;;
+    1) # Minimal — shadows only
+      picom --backend xrender \
+        --shadow --shadow-radius 12 --shadow-opacity 0.14 \
+        --no-fading-openclose \
+        --corner-radius 8 \
+        --daemon 2>/dev/null || true
+      echo "Glass Level: MINIMAL (shadows only)"
+      ;;
+    2) # Standard — rounded corners + fading (default)
+      picom --config "$PICOM_SAFE" --daemon 2>/dev/null || true
+      echo "Glass Level: STANDARD (rounded + fading)"
+      ;;
+    3) # Full Glass — blur + all effects
+      picom --config "$PICOM_CONF" --daemon 2>/dev/null || \
+        picom --config "$PICOM_SAFE" --daemon 2>/dev/null || true
+      echo "Glass Level: FULL GLASS (blur + all effects)"
+      ;;
+  esac
+}
+
+# CLI mode
+if [[ "${1:-}" =~ ^[0-3]$ ]]; then
+  apply_level "$1"
+  exit 0
+fi
+
+# GUI mode
+if command -v zenity >/dev/null 2>&1 && [[ -n "${DISPLAY:-}" ]]; then
+  CURRENT=$(get_level)
+  CHOICE=$(zenity --list \
+    --title="chanxOS Glass Manager" \
+    --window-icon="chanxos-settings" \
+    --width=500 --height=360 \
+    --text="<b>chanxOS Liquid Glass Manager</b>
+Pilih level efek visual:" \
+    --radiolist \
+    --column="Pilih" --column="Level" --column="Deskripsi" \
+    $([ "$CURRENT" = "0" ] && echo "TRUE" || echo "FALSE") "0  Off"           "Tanpa compositor (performa max)" \
+    $([ "$CURRENT" = "1" ] && echo "TRUE" || echo "FALSE") "1  Minimal"       "Shadow saja (cocok untuk VM)" \
+    $([ "$CURRENT" = "2" ] && echo "TRUE" || echo "FALSE") "2  Standard"      "Rounded corners + fading (default)" \
+    $([ "$CURRENT" = "3" ] && echo "TRUE" || echo "FALSE") "3  Full Glass"    "Full blur + semua efek (GPU)" \
+    2>/dev/null) || exit 0
+
+  LEVEL="${CHOICE:0:1}"
+  apply_level "$LEVEL"
+
+  zenity --info \
+    --title="chanxOS Glass Manager" \
+    --window-icon="chanxos-settings" \
+    --width=320 \
+    --text="Glass level berhasil diubah ke: <b>${CHOICE}</b>" \
+    2>/dev/null || true
+else
+  echo "chanxOS Glass Manager"
+  echo "Usage: chanx-glass [0-3]"
+  echo "  0 = Off    (no compositor)"
+  echo "  1 = Minimal (shadows only)"
+  echo "  2 = Standard (default)"
+  echo "  3 = Full Glass (blur + effects)"
+  echo "Current level: $(get_level)"
+fi

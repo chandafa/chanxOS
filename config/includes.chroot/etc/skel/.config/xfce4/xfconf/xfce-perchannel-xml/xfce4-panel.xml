@@ -4,17 +4,21 @@
   <property name="panels" type="array">
     <value type="int" value="1"/>
     <property name="panel-1" type="empty">
-      <property name="position" type="string" value="p=6;x=0;y=0"/>
-      <property name="position-locked" type="bool" value="true"/>
-      <property name="length" type="uint" value="100"/>
-      <property name="size" type="uint" value="34"/>
-      <property name="mode" type="uint" value="0"/>
-      <property name="background-style" type="uint" value="1"/>
+      <!-- Top bar: full width, 36px, semi-transparent liquid glass -->
+      <property name="position"        type="string"  value="p=6;x=0;y=0"/>
+      <property name="position-locked" type="bool"    value="true"/>
+      <property name="length"          type="uint"    value="100"/>
+      <property name="size"            type="uint"    value="36"/>
+      <property name="mode"            type="uint"    value="0"/>
+      <property name="enter-opacity"   type="uint"    value="100"/>
+      <property name="leave-opacity"   type="uint"    value="95"/>
+      <property name="background-style" type="uint"   value="1"/>
       <property name="background-rgba" type="array">
+        <!-- rgba(255,255,255,0.42) — frosted glass white panel -->
         <value type="double" value="1.000000"/>
         <value type="double" value="1.000000"/>
         <value type="double" value="1.000000"/>
-        <value type="double" value="0.360000"/>
+        <value type="double" value="0.420000"/>
       </property>
       <property name="plugin-ids" type="array">
         <value type="int" value="1"/>
@@ -22,23 +26,70 @@
         <value type="int" value="3"/>
         <value type="int" value="4"/>
         <value type="int" value="5"/>
+        <value type="int" value="6"/>
+        <value type="int" value="7"/>
+        <value type="int" value="8"/>
+        <value type="int" value="9"/>
       </property>
     </property>
   </property>
   <property name="plugins" type="empty">
+    <!-- Left: App menu with chanxOS logo -->
     <property name="plugin-1" type="string" value="applicationsmenu">
-      <property name="button-title" type="string" value="chanxOS"/>
-      <property name="button-icon" type="string" value="chanxos-logo"/>
-      <property name="show-button-title" type="bool" value="true"/>
+      <property name="button-title"     type="string"  value="chanxOS"/>
+      <property name="button-icon"      type="string"  value="chanxos-logo"/>
+      <property name="show-button-title" type="bool"   value="false"/>
+      <property name="show-tooltip-category" type="bool" value="true"/>
+      <property name="small"            type="bool"    value="false"/>
     </property>
-    <property name="plugin-2" type="string" value="separator">
+
+    <!-- Window buttons (taskbar) — shows open apps -->
+    <property name="plugin-2" type="string" value="tasklist">
+      <property name="show-labels"      type="bool"   value="true"/>
+      <property name="grouping"         type="uint"   value="1"/>
+      <property name="middle-click"     type="uint"   value="0"/>
+      <property name="show-handle"      type="bool"   value="false"/>
+      <property name="include-all-workspaces" type="bool" value="false"/>
+      <property name="flat-buttons"     type="bool"   value="true"/>
+      <property name="show-wireframes"  type="bool"   value="false"/>
+    </property>
+
+    <!-- Flexible spacer to push right items to right -->
+    <property name="plugin-3" type="string" value="separator">
       <property name="expand" type="bool" value="true"/>
-      <property name="style" type="uint" value="0"/>
+      <property name="style"  type="uint" value="0"/>
     </property>
-    <property name="plugin-3" type="string" value="systray"/>
-    <property name="plugin-4" type="string" value="pulseaudio"/>
-    <property name="plugin-5" type="string" value="clock">
-      <property name="digital-format" type="string" value="%a %d %b  %H:%M"/>
+
+    <!-- System tray -->
+    <property name="plugin-4" type="string" value="systray">
+      <property name="size-max"         type="uint"   value="22"/>
+      <property name="show-frame"       type="bool"   value="false"/>
+    </property>
+
+    <!-- PulseAudio volume -->
+    <property name="plugin-5" type="string" value="pulseaudio">
+      <property name="enable-keyboard-shortcuts" type="bool" value="true"/>
+      <property name="show-notifications"        type="bool" value="true"/>
+    </property>
+
+    <!-- Network Manager -->
+    <property name="plugin-6" type="string" value="nm-applet"/>
+
+    <!-- Power manager / battery -->
+    <property name="plugin-7" type="string" value="power-manager-plugin"/>
+
+    <!-- Small separator before clock -->
+    <property name="plugin-8" type="string" value="separator">
+      <property name="expand" type="bool" value="false"/>
+      <property name="style"  type="uint" value="0"/>
+    </property>
+
+    <!-- Clock: clean date+time -->
+    <property name="plugin-9" type="string" value="clock">
+      <property name="mode"           type="uint"   value="2"/>
+      <property name="digital-format" type="string" value="%H:%M  %a %d %b"/>
+      <property name="show-frame"     type="bool"   value="false"/>
+      <property name="tooltip-format" type="string" value="%A, %B %d %Y"/>
     </property>
   </property>
 </channel>

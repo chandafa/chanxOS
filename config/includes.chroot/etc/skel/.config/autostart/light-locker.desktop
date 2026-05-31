@@ -1,8 +1,9 @@
 [Desktop Entry]
 Type=Application
-Name=chanxOS Lock Screen
-Exec=light-locker --lock-after-screensaver=0 --late-locking --no-lock-on-lid
+Name=Light Locker
+Comment=Screen locker for chanxOS
+Exec=light-locker --lock-after-screensaver=30
 X-GNOME-Autostart-enabled=true
-NoDisplay=false
+OnlyShowIn=XFCE;
 Terminal=false
 Hidden=false

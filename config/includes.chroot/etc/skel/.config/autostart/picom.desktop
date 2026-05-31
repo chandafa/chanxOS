@@ -1,7 +1,9 @@
 [Desktop Entry]
 Type=Application
-Name=Picom
-Exec=sh -lc 'sleep 2; picom --config "$HOME/.config/picom/picom.conf" || true'
+Name=Picom Compositor
+Comment=chanxOS liquid glass compositor
+Exec=bash -lc 'sleep 2; chanx-compositor'
 X-GNOME-Autostart-enabled=true
 OnlyShowIn=XFCE;
 Terminal=false
+Hidden=false

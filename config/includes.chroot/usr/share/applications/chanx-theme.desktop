@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=chanxOS Theme Switcher
+Comment=Toggle light/dark glass mode
+Exec=chanx-theme
+Icon=chanxos-settings
+Terminal=false
+Categories=System;Settings;

@@ -1,40 +1,395 @@
-@define-color chanx_bg rgba(237,245,252,0.92);
-@define-color chanx_panel rgba(255,255,255,0.55);
-@define-color chanx_border rgba(180,205,230,0.9);
-@define-color chanx_text #16324a;
-@define-color chanx_accent #4aa8ff;
+/* ═══════════════════════════════════════════════════════════════
+   chanxOS — ChanxGlass GTK3 Theme
+   Liquid Glass aesthetic: translucency, blur-ready, soft borders
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Color Variables ──────────────────────────────────────────── */
+@define-color chanx_accent       #2aa8e0;
+@define-color chanx_accent_hover #1a9ed6;
+@define-color chanx_accent_alpha  rgba(42, 168, 224, 0.20);
+
+@define-color chanx_glass_bg      rgba(248, 252, 255, 0.88);
+@define-color chanx_glass_surface rgba(255, 255, 255, 0.72);
+@define-color chanx_glass_panel   rgba(255, 255, 255, 0.55);
+@define-color chanx_glass_border  rgba(180, 210, 235, 0.70);
+@define-color chanx_glass_shadow  rgba(30, 80, 130, 0.10);
+
+@define-color chanx_text          #12293f;
+@define-color chanx_text_muted    #6a8aa8;
+@define-color chanx_text_white    #ffffff;
+
+/* ── Reset ────────────────────────────────────────────────────── */
 * {
-  border-radius: 12px;
   outline-width: 0;
-  -gtk-outline-radius: 12px;
+  -gtk-outline-radius: 0;
 }
-window, dialog, .background {
-  background-color: @chanx_bg;
+
+/* ── Window & Background ─────────────────────────────────────── */
+window, .background, dialog {
+  background-color: @chanx_glass_bg;
   color: @chanx_text;
 }
-headerbar, .titlebar {
-  background: linear-gradient(to bottom, rgba(255,255,255,0.85), rgba(240,248,255,0.72));
-  border: 1px solid rgba(184,210,236,0.8);
-  box-shadow: 0 8px 24px rgba(90,145,190,0.14);
-  color: @chanx_text;
+
+.window-frame {
+  box-shadow: 0 12px 40px rgba(20, 60, 100, 0.18),
+              0 2px 8px rgba(20, 60, 100, 0.10);
+  margin: 10px;
 }
-headerbar button, .titlebar button, button {
-  background: linear-gradient(to bottom, rgba(255,255,255,0.88), rgba(229,241,252,0.88));
-  border: 1px solid rgba(182,208,232,0.95);
-  color: @chanx_text;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);
+
+/* ── Titlebar / Headerbar ────────────────────────────────────── */
+headerbar,
+.titlebar {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.90) 0%,
+    rgba(235, 246, 255, 0.80) 100%
+  );
+  border-bottom: 1px solid @chanx_glass_border;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.80) inset,
+              0 4px 16px @chanx_glass_shadow;
   padding: 6px 12px;
+  color: @chanx_text;
+  min-height: 42px;
+  border-radius: 12px 12px 0 0;
 }
-button:hover { background: rgba(255,255,255,0.95); }
-entry, textview, .view, scrolledwindow {
-  background-color: rgba(255,255,255,0.82);
-  border: 1px solid rgba(187,210,232,0.9);
+
+headerbar .title {
+  font-weight: 600;
+  font-size: 10pt;
   color: @chanx_text;
 }
-menubar, menu, .menu, popover, tooltip, notebook > header {
-  background-color: rgba(248,252,255,0.82);
-  border: 1px solid rgba(188,210,232,0.9);
+
+headerbar .subtitle {
+  font-size: 8pt;
+  color: @chanx_text_muted;
+}
+
+/* ── Window Control Buttons (macOS style) ────────────────────── */
+headerbar button.titlebutton {
+  background: transparent;
+  border: none;
+  padding: 4px;
+  border-radius: 50%;
+  min-width: 14px;
+  min-height: 14px;
+  box-shadow: none;
+}
+
+headerbar button.titlebutton:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* ── Buttons ─────────────────────────────────────────────────── */
+button {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.92) 0%,
+    rgba(228, 242, 255, 0.88) 100%
+  );
+  border: 1px solid @chanx_glass_border;
+  border-radius: 8px;
+  color: @chanx_text;
+  padding: 6px 14px;
+  box-shadow: 0 1px 2px @chanx_glass_shadow,
+              inset 0 1px 0 rgba(255, 255, 255, 0.70);
+  transition: all 120ms ease;
+}
+
+button:hover {
+  background: rgba(255, 255, 255, 0.98);
+  border-color: rgba(42, 168, 224, 0.50);
+  box-shadow: 0 2px 8px rgba(42, 168, 224, 0.15);
+}
+
+button:active {
+  background: rgba(220, 238, 255, 0.95);
+  box-shadow: inset 0 2px 4px rgba(20, 60, 100, 0.10);
+}
+
+button.suggested-action {
+  background: linear-gradient(180deg, #3ab8f0, #2098d0);
+  border-color: #1888c0;
+  color: @chanx_text_white;
+  box-shadow: 0 2px 8px rgba(42, 168, 224, 0.35);
+}
+
+button.suggested-action:hover {
+  background: linear-gradient(180deg, #48c4f8, #26a4dc);
+}
+
+button.destructive-action {
+  background: linear-gradient(180deg, #ff7b7b, #e05050);
+  border-color: #cc4040;
+  color: @chanx_text_white;
+}
+
+/* ── Entry / Text Input ──────────────────────────────────────── */
+entry, spinbutton text, textview text {
+  background-color: rgba(255, 255, 255, 0.85);
+  border: 1px solid @chanx_glass_border;
+  border-radius: 8px;
+  color: @chanx_text;
+  padding: 6px 10px;
+  box-shadow: inset 0 1px 3px rgba(20, 60, 100, 0.06);
+}
+
+entry:focus, spinbutton text:focus, textview text:focus {
+  border-color: @chanx_accent;
+  box-shadow: 0 0 0 3px @chanx_accent_alpha,
+              inset 0 1px 3px rgba(20, 60, 100, 0.06);
+}
+
+/* ── Selection ───────────────────────────────────────────────── */
+selection, *:selected {
+  background-color: @chanx_accent;
+  color: @chanx_text_white;
+}
+
+/* ── Menus ───────────────────────────────────────────────────── */
+menu, .menu, .context-menu {
+  background-color: rgba(248, 252, 255, 0.95);
+  border: 1px solid @chanx_glass_border;
+  border-radius: 10px;
+  padding: 4px 0;
+  box-shadow: 0 8px 32px rgba(20, 60, 100, 0.18),
+              0 1px 4px rgba(20, 60, 100, 0.10);
   color: @chanx_text;
 }
-.sidebar, .navigation-sidebar { background-color: rgba(255,255,255,0.48); }
-selection { background-color: rgba(74,168,255,0.35); }
+
+menuitem {
+  border-radius: 6px;
+  margin: 2px 4px;
+  padding: 6px 12px;
+  color: @chanx_text;
+}
+
+menuitem:hover, menuitem:selected {
+  background-color: @chanx_accent_alpha;
+  color: @chanx_text;
+}
+
+menuitem separator {
+  background-color: @chanx_glass_border;
+  margin: 4px 8px;
+}
+
+/* ── Menubar ─────────────────────────────────────────────────── */
+menubar {
+  background-color: rgba(248, 252, 255, 0.90);
+  border-bottom: 1px solid @chanx_glass_border;
+  padding: 2px 4px;
+  color: @chanx_text;
+}
+
+menubar > menuitem {
+  border-radius: 6px;
+  padding: 4px 10px;
+}
+
+menubar > menuitem:hover {
+  background-color: @chanx_accent_alpha;
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────── */
+scrollbar {
+  background: transparent;
+  border: none;
+}
+
+scrollbar trough {
+  background: rgba(180, 210, 235, 0.25);
+  border-radius: 4px;
+  min-width: 6px;
+  min-height: 6px;
+}
+
+scrollbar slider {
+  background: rgba(100, 160, 200, 0.45);
+  border-radius: 4px;
+  min-width: 6px;
+  min-height: 6px;
+  border: none;
+}
+
+scrollbar slider:hover {
+  background: rgba(42, 168, 224, 0.65);
+}
+
+/* ── Scrolled Window / Views ────────────────────────────────── */
+scrolledwindow,
+.view,
+treeview,
+iconview {
+  background-color: rgba(248, 252, 255, 0.85);
+  border: 1px solid @chanx_glass_border;
+  border-radius: 8px;
+  color: @chanx_text;
+}
+
+treeview row:selected,
+iconview item:selected {
+  background-color: @chanx_accent_alpha;
+  color: @chanx_text;
+  border-radius: 4px;
+}
+
+/* ── Sidebar ─────────────────────────────────────────────────── */
+.sidebar,
+.navigation-sidebar {
+  background-color: rgba(240, 248, 255, 0.60);
+  border-right: 1px solid @chanx_glass_border;
+  color: @chanx_text;
+}
+
+.sidebar row:selected,
+.navigation-sidebar row:selected {
+  background-color: @chanx_accent_alpha;
+  color: @chanx_text;
+  border-radius: 6px;
+}
+
+/* ── Notebook / Tabs ─────────────────────────────────────────── */
+notebook > header {
+  background-color: @chanx_glass_panel;
+  border-bottom: 1px solid @chanx_glass_border;
+}
+
+notebook > header > tabs > tab {
+  padding: 6px 14px;
+  border-radius: 8px 8px 0 0;
+  color: @chanx_text_muted;
+  background: transparent;
+}
+
+notebook > header > tabs > tab:checked {
+  background: rgba(255, 255, 255, 0.85);
+  color: @chanx_text;
+  border: 1px solid @chanx_glass_border;
+  border-bottom: none;
+}
+
+/* ── Tooltip ─────────────────────────────────────────────────── */
+tooltip,
+.tooltip {
+  background-color: rgba(20, 45, 70, 0.90);
+  border: 1px solid rgba(60, 110, 150, 0.60);
+  border-radius: 8px;
+  color: rgba(220, 240, 255, 0.95);
+  padding: 4px 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+/* ── Popover ─────────────────────────────────────────────────── */
+popover,
+.popover {
+  background-color: rgba(248, 252, 255, 0.96);
+  border: 1px solid @chanx_glass_border;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(20, 60, 100, 0.20);
+  padding: 8px;
+}
+
+/* ── Progress Bar ────────────────────────────────────────────── */
+progressbar trough {
+  background: rgba(180, 210, 235, 0.35);
+  border-radius: 4px;
+  min-height: 6px;
+}
+
+progressbar progress {
+  background: linear-gradient(90deg, @chanx_accent, #60d0ff);
+  border-radius: 4px;
+  min-height: 6px;
+}
+
+/* ── Scale / Slider ──────────────────────────────────────────── */
+scale trough {
+  background: rgba(180, 210, 235, 0.40);
+  border-radius: 4px;
+}
+
+scale highlight {
+  background: @chanx_accent;
+  border-radius: 4px;
+}
+
+scale slider {
+  background: @chanx_text_white;
+  border: 1px solid @chanx_glass_border;
+  border-radius: 50%;
+  min-width: 16px;
+  min-height: 16px;
+  box-shadow: 0 2px 6px rgba(20, 60, 100, 0.20);
+}
+
+/* ── Check & Radio ───────────────────────────────────────────── */
+checkbutton check,
+radiobutton radio {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1.5px solid @chanx_glass_border;
+  border-radius: 4px;
+}
+
+checkbutton check:checked,
+radiobutton radio:checked {
+  background: @chanx_accent;
+  border-color: @chanx_accent;
+  color: @chanx_text_white;
+}
+
+/* ── Switch ──────────────────────────────────────────────────── */
+switch {
+  background: rgba(180, 210, 235, 0.50);
+  border-radius: 14px;
+  border: 1px solid @chanx_glass_border;
+  min-width: 46px;
+  min-height: 26px;
+}
+
+switch:checked {
+  background: @chanx_accent;
+  border-color: @chanx_accent_hover;
+}
+
+switch slider {
+  background: @chanx_text_white;
+  border-radius: 50%;
+  min-width: 20px;
+  min-height: 20px;
+  box-shadow: 0 2px 4px rgba(20, 60, 100, 0.20);
+}
+
+/* ── Separator ───────────────────────────────────────────────── */
+separator {
+  background-color: @chanx_glass_border;
+  min-height: 1px;
+  min-width: 1px;
+}
+
+/* ── Spinner ─────────────────────────────────────────────────── */
+spinner {
+  color: @chanx_accent;
+}
+
+/* ── Status Bar ──────────────────────────────────────────────── */
+statusbar {
+  background: @chanx_glass_panel;
+  border-top: 1px solid @chanx_glass_border;
+  font-size: 9pt;
+  color: @chanx_text_muted;
+  padding: 2px 8px;
+}
+
+/* ── File Chooser ────────────────────────────────────────────── */
+.path-bar button {
+  border-radius: 6px;
+  padding: 4px 8px;
+}
+
+/* ── Terminal-specific (xfce4-terminal) ──────────────────────── */
+VteTerminal,
+vte-terminal {
+  background-color: rgba(8, 18, 30, 0.94);
+  color: #d4eeff;
+  border-radius: 0;
+}

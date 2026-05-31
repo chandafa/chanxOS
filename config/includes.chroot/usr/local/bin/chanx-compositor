@@ -1,16 +1,33 @@
 #!/usr/bin/env bash
+# chanxOS Compositor Launcher
+# Mencoba GLX (hardware blur), fallback ke xrender jika gagal
 set -euo pipefail
 
-CONFIG="${HOME}/.config/picom/picom.conf"
+GLX_CONF="${HOME}/.config/picom/picom.conf"
+SAFE_CONF="${HOME}/.config/picom/picom-safe.conf"
+LOG_GLX="/tmp/chanxos-picom-glx.log"
+LOG_SAFE="/tmp/chanxos-picom-safe.log"
+
+# Kill existing picom instance
+pkill -x picom 2>/dev/null || true
+sleep 0.5
 
 if ! command -v picom >/dev/null 2>&1; then
   exit 0
 fi
 
-# Try chanxOS glass config first. If the local picom build rejects a blur option,
-# fall back to safe defaults instead of breaking login/autostart.
-if [[ -f "$CONFIG" ]]; then
-  picom --config "$CONFIG" >/tmp/chanxos-picom.log 2>&1 || picom >/tmp/chanxos-picom-fallback.log 2>&1 || true
+# Try GLX (full blur & effects) first
+if [[ -f "$GLX_CONF" ]]; then
+  if picom --config "$GLX_CONF" >"$LOG_GLX" 2>&1; then
+    exit 0
+  fi
+fi
+
+# Fallback to safe xrender config
+if [[ -f "$SAFE_CONF" ]]; then
+  picom --config "$SAFE_CONF" >"$LOG_SAFE" 2>&1 || true
+elif [[ -f "$GLX_CONF" ]]; then
+  picom --backend xrender --config "$GLX_CONF" >"$LOG_SAFE" 2>&1 || true
 else
-  picom >/tmp/chanxos-picom-fallback.log 2>&1 || true
+  picom --backend xrender >"$LOG_SAFE" 2>&1 || true
 fi

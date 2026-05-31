@@ -2,14 +2,44 @@
 FontName=DejaVu Sans Mono 11
 MiscAlwaysShowTabs=FALSE
 MiscBell=FALSE
-MiscDefaultGeometry=110x30
-MiscMenubarDefault=TRUE
+MiscBellUrgent=FALSE
+MiscDefaultGeometry=110x32
+MiscMenubarDefault=FALSE
 MiscMouseAutohide=FALSE
+MiscMouseScrollOnTab=TRUE
 MiscToolbarDefault=FALSE
+MiscCycleScroll=TRUE
+MiscTabCloseButtons=TRUE
+MiscTabCloseMiddleClick=TRUE
+MiscTabPosition=XFCE_GTK_MENU_POSITION_BOTTOM
+MiscHighlightUrls=TRUE
+MiscMiddleClickAction=TERMINAL_MIDDLE_CLICK_CLOSES_TAB
+MiscRewrapOnResize=TRUE
+MiscUseShiftArrowsToScroll=FALSE
+MiscConfirmClose=FALSE
+MiscCursorBlinks=FALSE
+MiscCursorShape=TERMINAL_CURSOR_SHAPE_BLOCK
+MiscNewTabAgreement=FALSE
+MiscNewTabsInActiveWindow=FALSE
+MiscSlimTabs=FALSE
+MiscUseDefaultGeometry=TRUE
+
+; chanxOS dark translucent terminal
 BackgroundMode=TERMINAL_BACKGROUND_TRANSPARENT
-BackgroundDarkness=0.920000
-ColorForeground=#EFFFFF
+BackgroundDarkness=0.900000
+ColorForeground=#D4EEFF
 ColorBackground=#08131F
 ColorCursor=#67C4FF
-ColorSelection=#266CA8
-ColorPalette=#000000;#EF6B73;#66D9A3;#F8C766;#65B8FF;#C792EA;#75D5E5;#E6EDF3;#63748A;#FF8B96;#88F5B7;#FFE28A;#8FD1FF;#D6B3FF;#98E9F7;#FFFFFF
+ColorCursorForeground=#08131F
+ColorSelection=#1E5A8A
+ColorSelectionUseDefault=FALSE
+ColorBold=#FFFFFF
+ColorBoldUseDefault=FALSE
+
+; chanxOS color palette (dark blue-tinted)
+ColorPalette=#1a2030;#EF6B73;#66D9A3;#F8C766;#65B8FF;#C792EA;#75D5E5;#C0D0E0;#4a5a6a;#FF8B96;#88F5B7;#FFE28A;#8FD1FF;#D6B3FF;#98E9F7;#FFFFFF
+
+; Scrollback
+ScrollingBar=TERMINAL_SCROLLBAR_NONE
+ScrollingLines=5000
+ScrollingUnlimited=FALSE

@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+# chanxOS Theme Switcher
+# Toggle antara Light Glass, Dark Glass, dan Auto (mengikuti waktu)
+set -euo pipefail
+
+STATE_FILE="${HOME}/.config/chanxos/theme-mode"
+mkdir -p "${HOME}/.config/chanxos"
+
+LIGHT_BG="rgba(248, 252, 255, 0.88)"
+DARK_BG="rgba(12, 22, 36, 0.92)"
+
+get_mode() { cat "$STATE_FILE" 2>/dev/null || echo "light"; }
+
+apply_light() {
+  echo "light" > "$STATE_FILE"
+  # xfconf: panel background
+  xfconf-query -c xfce4-panel -p /panels/panel-1/background-rgba \
+    -t double -t double -t double -t double \
+    -s 1.0 -s 1.0 -s 1.0 -s 0.42 2>/dev/null || true
+  # GTK theme
+  xfconf-query -c xsettings -p /Net/ThemeName -s "ChanxGlass" 2>/dev/null || true
+  # Desktop: lighter wallpaper hint (aplikasi opsional)
+  echo "Theme: Light Glass"
+}
+
+apply_dark() {
+  echo "dark" > "$STATE_FILE"
+  # Panel — dark semi-transparent
+  xfconf-query -c xfce4-panel -p /panels/panel-1/background-rgba \
+    -t double -t double -t double -t double \
+    -s 0.05 -s 0.09 -s 0.14 -s 0.82 2>/dev/null || true
+  # GTK theme (dark variant kalau ada)
+  xfconf-query -c xsettings -p /Net/ThemeName -s "ChanxGlass-Dark" 2>/dev/null || \
+    xfconf-query -c xsettings -p /Net/ThemeName -s "ChanxGlass" 2>/dev/null || true
+  echo "Theme: Dark Glass"
+}
+
+apply_auto() {
+  echo "auto" > "$STATE_FILE"
+  local hour
+  hour=$(date +%H)
+  if [ "$hour" -ge 7 ] && [ "$hour" -lt 19 ]; then
+    apply_light
+    echo "(Auto: daytime → Light Glass)"
+  else
+    apply_dark
+    echo "(Auto: nighttime → Dark Glass)"
+  fi
+}
+
+# CLI
+case "${1:-}" in
+  light) apply_light; exit 0 ;;
+  dark)  apply_dark;  exit 0 ;;
+  auto)  apply_auto;  exit 0 ;;
+esac
+
+# GUI
+if command -v zenity >/dev/null 2>&1 && [[ -n "${DISPLAY:-}" ]]; then
+  CURRENT=$(get_mode)
+  CHOICE=$(zenity --list \
+    --title="chanxOS Theme Switcher" \
+    --window-icon="chanxos-settings" \
+    --width=420 --height=300 \
+    --text="<b>chanxOS Theme Mode</b>
+Pilih mode tampilan:" \
+    --radiolist \
+    --column="Pilih" --column="Mode" --column="Deskripsi" \
+    $([ "$CURRENT" = "light" ] && echo "TRUE" || echo "FALSE") "light" "Light Glass — terang, segar" \
+    $([ "$CURRENT" = "dark"  ] && echo "TRUE" || echo "FALSE") "dark"  "Dark Glass  — gelap, elegan" \
+    $([ "$CURRENT" = "auto"  ] && echo "TRUE" || echo "FALSE") "auto"  "Auto        — ikuti waktu (7–19 = light)" \
+    2>/dev/null) || exit 0
+
+  case "$CHOICE" in
+    light) apply_light ;;
+    dark)  apply_dark ;;
+    auto)  apply_auto ;;
+  esac
+
+  zenity --info \
+    --title="chanxOS Theme Switcher" \
+    --window-icon="chanxos-settings" \
+    --width=300 \
+    --text="Mode berhasil diubah ke: <b>${CHOICE}</b>" \
+    2>/dev/null || true
+else
+  echo "chanxOS Theme Switcher"
+  echo "Usage: chanx-theme [light|dark|auto]"
+  echo "Current: $(get_mode)"
+fi

@@ -1,4 +1,18 @@
+# chanxOS Unique Features & Tools
 zenity
 bash-completion
 python3-gi
 gir1.2-gtk-3.0
+xfce4-power-manager
+network-manager-gnome
+xfce4-notifyd
+libnotify-bin
+gvfs
+gvfs-backends
+thunar-volman
+thunar-archive-plugin
+xfce4-whiskermenu-plugin
+xfce4-pulseaudio-plugin
+xfce4-clipman-plugin
+mousepad
+ristretto

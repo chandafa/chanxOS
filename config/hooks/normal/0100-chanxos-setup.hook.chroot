@@ -1,8 +1,12 @@
 #!/bin/sh
+# chanxOS Chroot Setup Hook
+# Konfigurasi sistem, branding, dan default user environment
 set -e
 
-chmod +x /usr/local/bin/chanx-* || true
+# ── 1. Executable permissions ─────────────────────────────────────────────────
+chmod +x /usr/local/bin/chanx-* 2>/dev/null || true
 
+# ── 2. NetworkManager ─────────────────────────────────────────────────────────
 mkdir -p /etc/NetworkManager/conf.d
 cat > /etc/NetworkManager/conf.d/chanxos.conf <<'CFG'
 [main]
@@ -12,6 +16,7 @@ plugins=ifupdown,keyfile
 managed=true
 CFG
 
+# ── 3. LightDM — auto-login chanx ────────────────────────────────────────────
 mkdir -p /etc/lightdm
 cat > /etc/lightdm/lightdm.conf <<'CFG'
 [LightDM]
@@ -31,14 +36,17 @@ background=/usr/share/backgrounds/chanxos/lockscreen.png
 theme-name=ChanxGlass
 icon-theme-name=Papirus
 font-name=Inter 10
+clock-format=%H:%M  %A, %d %B %Y
 indicators=~host;~spacer;~clock;~spacer;~session;~language;~a11y;~power
 position=50%,center 50%,center
 xft-antialias=true
+xft-dpi=96
 xft-hintstyle=hintslight
 xft-rgba=rgb
-default-user-image=#
+default-user-image=#chanxos-logo
 CFG
 
+# ── 4. GTK system defaults ────────────────────────────────────────────────────
 mkdir -p /etc/gtk-3.0
 cat > /etc/gtk-3.0/settings.ini <<'CFG'
 [Settings]
@@ -46,56 +54,96 @@ gtk-theme-name=ChanxGlass
 gtk-icon-theme-name=Papirus
 gtk-font-name=Inter 10
 gtk-cursor-theme-name=Adwaita
+gtk-cursor-theme-size=24
+gtk-button-images=false
+gtk-menu-images=true
+gtk-enable-animations=true
+gtk-application-prefer-dark-theme=false
+gtk-xft-antialias=1
+gtk-xft-dpi=96000
+gtk-xft-hintstyle=hintslight
+gtk-xft-rgba=rgb
 CFG
 
-mkdir -p /etc/skel/.config/xfce4
+# ── 5. Skel: xsession ─────────────────────────────────────────────────────────
 cat > /etc/skel/.xsession <<'CFG'
 exec startxfce4
 CFG
-chmod +x /etc/skel/.xsession || true
+chmod +x /etc/skel/.xsession 2>/dev/null || true
 
+# ── 6. Shell aliases + env ────────────────────────────────────────────────────
 cat > /etc/profile.d/chanxos.sh <<'CFG'
+# chanxOS shell helpers
 alias cupdate='chanx-update'
 alias cinfo='chanx-info'
 alias cdev='chanx-devpack'
 alias cinstall='chanx-install'
+alias cglass='chanx-glass'
+alias ctheme='chanx-theme'
+alias cstudy='chanx-study-mode'
+
+# Pretty prompt
+export PS1='\[\033[1;36m\]chanx\[\033[0;37m\]@\[\033[1;36m\]\h\[\033[0m\]:\[\033[1;34m\]\w\[\033[0m\]\$ '
+
+# XDG
+export XDG_DATA_HOME="${HOME}/.local/share"
+export XDG_CONFIG_HOME="${HOME}/.config"
+export XDG_CACHE_HOME="${HOME}/.cache"
 CFG
 
-# Setup Plymouth theme chanxOS
+# ── 7. Plymouth boot theme ────────────────────────────────────────────────────
 if [ -d /usr/share/plymouth/themes/chanxos ]; then
-  # Pastikan file logo.png ada (alias ke chanxos-logo.png)
+  # Ensure logo.png exists (Plymouth looks for this)
   if [ ! -f /usr/share/plymouth/themes/chanxos/logo.png ] && \
      [ -f /usr/share/plymouth/themes/chanxos/chanxos-logo.png ]; then
     cp /usr/share/plymouth/themes/chanxos/chanxos-logo.png \
        /usr/share/plymouth/themes/chanxos/logo.png
   fi
-
-  if command -v plymouth-set-default-theme >/dev/null 2>&1; then
-    plymouth-set-default-theme chanxos || true
-  elif [ -f /etc/alternatives/default.plymouth ]; then
-    ln -sf /usr/share/plymouth/themes/chanxos/chanxos.plymouth \
-      /etc/alternatives/default.plymouth || true
+  # Also copy background if missing
+  if [ ! -f /usr/share/plymouth/themes/chanxos/background.png ] && \
+     [ -f /usr/share/backgrounds/chanxos/wallpaper.png ]; then
+    cp /usr/share/backgrounds/chanxos/wallpaper.png \
+       /usr/share/plymouth/themes/chanxos/background.png 2>/dev/null || true
   fi
 
-  # Rebuild initramfs agar plymouth termuat saat boot
+  if command -v plymouth-set-default-theme >/dev/null 2>&1; then
+    plymouth-set-default-theme chanxos 2>/dev/null || true
+  fi
   if command -v update-initramfs >/dev/null 2>&1; then
     update-initramfs -u 2>/dev/null || true
   fi
 fi
 
+# ── 8. Desktop shortcuts ──────────────────────────────────────────────────────
+mkdir -p /etc/skel/Desktop
+for src in chanx-install chanx-welcome chanx-devpack; do
+  if [ -f /usr/share/applications/${src}.desktop ]; then
+    cp /usr/share/applications/${src}.desktop \
+       "/etc/skel/Desktop/${src}.desktop" 2>/dev/null || true
+    chmod +x "/etc/skel/Desktop/${src}.desktop" 2>/dev/null || true
+  fi
+done
+# Rename for display
+[ -f /etc/skel/Desktop/chanx-install.desktop ]  && \
+  cp /etc/skel/Desktop/chanx-install.desktop  "/etc/skel/Desktop/Install chanxOS.desktop"   2>/dev/null || true
+[ -f /etc/skel/Desktop/chanx-welcome.desktop ] && \
+  cp /etc/skel/Desktop/chanx-welcome.desktop  "/etc/skel/Desktop/Welcome chanxOS.desktop"  2>/dev/null || true
+# Remove originals with underscore names
+rm -f /etc/skel/Desktop/chanx-install.desktop \
+      /etc/skel/Desktop/chanx-welcome.desktop \
+      /etc/skel/Desktop/chanx-devpack.desktop 2>/dev/null || true
+
+# ── 9. Installer desktop file ─────────────────────────────────────────────────
 if [ -f /usr/share/applications/install-debian.desktop ]; then
   sed -i 's/^Name=.*/Name=Install chanxOS/' /usr/share/applications/install-debian.desktop || true
-  sed -i 's/^Comment=.*/Comment=Install chanxOS to disk/' /usr/share/applications/install-debian.desktop || true
-  if grep -q '^Icon=' /usr/share/applications/install-debian.desktop; then
-    sed -i 's|^Icon=.*|Icon=chanxos-installer|' /usr/share/applications/install-debian.desktop || true
-  else
+  sed -i 's/^Comment=.*/Comment=Install chanxOS to your hard disk/' /usr/share/applications/install-debian.desktop || true
+  grep -q '^Icon=' /usr/share/applications/install-debian.desktop && \
+    sed -i 's|^Icon=.*|Icon=chanxos-installer|' /usr/share/applications/install-debian.desktop || \
     printf '\nIcon=chanxos-installer\n' >> /usr/share/applications/install-debian.desktop
-  fi
 fi
 
-mkdir -p /etc/skel/Desktop
-cp -f /usr/share/applications/chanx-install.desktop /etc/skel/Desktop/Install\ chanxOS.desktop || true
-cp -f /usr/share/applications/chanx-welcome.desktop /etc/skel/Desktop/chanxOS\ Welcome.desktop || true
-chmod +x /etc/skel/Desktop/*.desktop || true
+# ── 10. Update desktop DB ─────────────────────────────────────────────────────
+command -v update-desktop-database >/dev/null 2>&1 && \
+  update-desktop-database /usr/share/applications 2>/dev/null || true
 
-command -v update-desktop-database >/dev/null 2>&1 && update-desktop-database /usr/share/applications || true
+echo "[chanxos-setup] Chroot setup complete."

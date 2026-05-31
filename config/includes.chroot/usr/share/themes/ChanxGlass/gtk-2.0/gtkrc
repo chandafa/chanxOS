@@ -1,7 +1,41 @@
-gtk-theme-name="ChanxGlass"
-gtk-icon-theme-name="Papirus"
-gtk-font-name="Inter 10"
-gtk-cursor-theme-name="Adwaita"
-gtk-toolbar-style=GTK_TOOLBAR_ICONS
-gtk-button-images=1
-gtk-menu-images=1
+# chanxOS ChanxGlass GTK2 Theme
+gtk-theme-name      = "ChanxGlass"
+gtk-icon-theme-name = "Papirus"
+gtk-font-name       = "Inter 10"
+gtk-cursor-theme-name = "Adwaita"
+gtk-cursor-theme-size = 24
+gtk-toolbar-style   = GTK_TOOLBAR_ICONS
+gtk-button-images   = 1
+gtk-menu-images     = 1
+gtk-xft-antialias   = 1
+gtk-xft-hinting     = 1
+gtk-xft-hintstyle   = "hintslight"
+gtk-xft-rgba        = "rgb"
+
+style "chanxglass-default" {
+  bg[NORMAL]      = "#F0F8FF"
+  bg[PRELIGHT]    = "#E8F4FF"
+  bg[SELECTED]    = "#2aa8e0"
+  bg[INSENSITIVE] = "#E0ECF5"
+  bg[ACTIVE]      = "#D8EDFF"
+
+  fg[NORMAL]      = "#12293f"
+  fg[PRELIGHT]    = "#12293f"
+  fg[SELECTED]    = "#ffffff"
+  fg[INSENSITIVE] = "#8aabbf"
+  fg[ACTIVE]      = "#12293f"
+
+  text[NORMAL]    = "#12293f"
+  text[SELECTED]  = "#ffffff"
+  text[ACTIVE]    = "#12293f"
+
+  base[NORMAL]    = "#FAFCFF"
+  base[SELECTED]  = "#2aa8e0"
+  base[ACTIVE]    = "#D8EDFF"
+
+  GtkWidget::focus-padding      = 0
+  GtkWidget::focus-line-width   = 0
+  GtkScrolledWindow::scrollbar-spacing = 0
+}
+
+class "*" style "chanxglass-default"

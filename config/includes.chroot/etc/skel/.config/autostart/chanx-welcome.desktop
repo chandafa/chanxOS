@@ -1,7 +1,11 @@
 [Desktop Entry]
 Type=Application
 Name=chanxOS Welcome Center
-Exec=chanx-welcome
+Comment=Open chanxOS welcome center on first login
+Exec=bash -lc 'sleep 5; chanx-welcome'
+Icon=chanxos-welcome
 X-GNOME-Autostart-enabled=true
-X-GNOME-Autostart-Delay=8
+X-GNOME-Autostart-Delay=5
+OnlyShowIn=XFCE;
 Terminal=false
+Hidden=false

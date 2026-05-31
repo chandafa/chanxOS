@@ -1,10 +1,30 @@
-.chroot
-.binary
-.build
-.cache
+cat > .gitignore <<'EOF'
+# live-build output
+chroot/
+cache/
+binary/
+binary.modified_timestamps
+chroot.files
+chroot.packages.install
+chroot.packages.live
+live-image-*
 *.iso
-*.img
-*.packages
-*.buildlog
-chanxos-build.log
-SHA256SUMS
+*.zsync
+wget-log*
+
+# generated live-build config
+config/binary/
+config/bootstrap/
+config/chroot/
+config/common/
+config/source/
+config/hooks/live/
+
+# system/editor
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp
+EOF
+
+

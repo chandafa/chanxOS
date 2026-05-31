@@ -59,7 +59,6 @@ lb config \
   --firmware-binary true \
   --firmware-chroot true \
   --bootappend-live "boot=live components username=chanx hostname=chanxos quiet splash"
-  --updates true \
   --security false \
 
 echo "==> Mulai build ISO. Proses ini bisa lama dan butuh internet stabil."

@@ -56,6 +56,10 @@ lb config \
   --binary-images iso-hybrid \
   --debian-installer live \
   --apt-recommends true \
+  --apt-options "--yes -o Acquire::Retries=5 -o Acquire::http::No-Cache=true -o Acquire::https::No-Cache=true" \
+  --mirror-bootstrap "http://ftp.debian.org/debian/" \
+  --mirror-chroot "http://ftp.debian.org/debian/" \
+  --mirror-binary "http://ftp.debian.org/debian/" \
   --firmware-binary true \
   --firmware-chroot true \
   --security false \

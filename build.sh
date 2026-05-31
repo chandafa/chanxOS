@@ -58,8 +58,8 @@ lb config \
   --apt-recommends true \
   --firmware-binary true \
   --firmware-chroot true \
-  --bootappend-live "boot=live components username=chanx hostname=chanxos quiet splash"
   --security false \
+  --bootappend-live "boot=live components username=chanx hostname=chanxos quiet splash"
 
 echo "==> Mulai build ISO. Proses ini bisa lama dan butuh internet stabil."
 ${SUDO} lb build 2>&1 | tee chanxos-build.log

@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=chanxOS DevPack
-Comment=Install developer tool packs
+Comment=Install optional developer tool packs
 Exec=chanx-devpack
 Icon=chanxos-devpack
 Terminal=false

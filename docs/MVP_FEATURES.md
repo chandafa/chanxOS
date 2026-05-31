@@ -2,7 +2,7 @@
 
 ## Core
 
-- chanxOS Live ISO
+- Debian-based Live ISO
 - XFCE Desktop
 - LightDM login manager
 - Network Manager

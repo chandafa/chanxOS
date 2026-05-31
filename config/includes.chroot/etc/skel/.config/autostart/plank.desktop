@@ -3,6 +3,4 @@ Type=Application
 Name=Plank
 Exec=plank
 X-GNOME-Autostart-enabled=true
-NoDisplay=false
 Terminal=false
-Hidden=false

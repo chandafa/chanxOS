@@ -1,0 +1,8 @@
+#!/bin/sh
+set -e
+if [ -f binary/isolinux/menu.cfg ]; then
+  sed -i 's/Debian GNU\/Linux/chanxOS/g; s/Live system/Live chanxOS/g; s/fail-safe mode/safe graphics/g; s/Start installer/Install chanxOS/g' binary/isolinux/menu.cfg || true
+fi
+if [ -f binary/boot/grub/grub.cfg ]; then
+  sed -i 's/Debian GNU\/Linux/chanxOS/g; s/Live system/Live chanxOS/g; s/fail-safe mode/safe graphics/g; s/Start installer/Install chanxOS/g' binary/boot/grub/grub.cfg || true
+fi

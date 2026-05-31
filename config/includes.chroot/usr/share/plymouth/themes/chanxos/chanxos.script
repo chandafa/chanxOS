@@ -1,7 +1,17 @@
-Window.SetBackgroundTopColor(0.92, 0.98, 1.00);
-Window.SetBackgroundBottomColor(0.64, 0.88, 1.00);
+logo.image = Image("logo.png");
+logo.sprite = Sprite(logo.image);
+logo.sprite.SetZ(10);
 
-logo_image = Image("chanxos-logo.png");
-logo_sprite = Sprite(logo_image);
-logo_sprite.SetX(Window.GetX() + Window.GetWidth() / 2 - logo_image.GetWidth() / 2);
-logo_sprite.SetY(Window.GetY() + Window.GetHeight() / 2 - logo_image.GetHeight() / 2);
+fun chanx_refresh () {
+  w = Window.GetWidth();
+  h = Window.GetHeight();
+  Window.SetBackgroundTopColor(0.05, 0.10, 0.16);
+  Window.SetBackgroundBottomColor(0.10, 0.32, 0.49);
+  logo_w = logo.image.GetWidth();
+  logo_h = logo.image.GetHeight();
+  logo.sprite.SetX((w / 2) - (logo_w / 2));
+  logo.sprite.SetY((h / 2) - (logo_h / 2) - 16);
+}
+
+Plymouth.SetRefreshFunction(chanx_refresh);
+chanx_refresh();

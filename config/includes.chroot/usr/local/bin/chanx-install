@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+if command -v calamares >/dev/null 2>&1; then
+  if command -v pkexec >/dev/null 2>&1; then
+    exec pkexec calamares
+  elif command -v sudo >/dev/null 2>&1; then
+    exec sudo calamares
+  else
+    exec calamares
+  fi
+elif command -v install-debian >/dev/null 2>&1; then
+  exec install-debian
+else
+  echo "Installer is not available in this session."
+  exit 1
+fi

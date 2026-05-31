@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=chanxOS Welcome Center
-Comment=Glass dashboard for chanxOS
+Comment=Open the chanxOS welcome center
 Exec=chanx-welcome
 Icon=chanxos-welcome
 Terminal=false

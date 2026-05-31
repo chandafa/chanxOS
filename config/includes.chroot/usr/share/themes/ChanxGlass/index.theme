@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=ChanxGlass
+Type=X-GNOME-Metatheme
+Comment=Light minimal glass theme for chanxOS
+[X-GNOME-Metatheme]
+GtkTheme=ChanxGlass
+MetacityTheme=ChanxGlass
+IconTheme=Papirus
+CursorTheme=Adwaita
+ButtonLayout=close,minimize,maximize:

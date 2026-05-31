@@ -25,6 +25,6 @@ chanxos-build.log
 
 ## Catatan
 
-- Build bisa gagal kalau upstream mirror sedang lambat atau package berubah.
+- Build bisa gagal kalau mirror Debian sedang lambat atau package berubah.
 - Jika gagal, buka `chanxos-build.log` di artifact/log Actions.
 - Untuk versi awal, test ISO dulu di VirtualBox/QEMU, jangan langsung install ke laptop utama.

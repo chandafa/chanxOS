@@ -1,0 +1,15 @@
+[Configuration]
+FontName=DejaVu Sans Mono 11
+MiscAlwaysShowTabs=FALSE
+MiscBell=FALSE
+MiscDefaultGeometry=110x30
+MiscMenubarDefault=TRUE
+MiscMouseAutohide=FALSE
+MiscToolbarDefault=FALSE
+BackgroundMode=TERMINAL_BACKGROUND_TRANSPARENT
+BackgroundDarkness=0.920000
+ColorForeground=#EFFFFF
+ColorBackground=#08131F
+ColorCursor=#67C4FF
+ColorSelection=#266CA8
+ColorPalette=#000000;#EF6B73;#66D9A3;#F8C766;#65B8FF;#C792EA;#75D5E5;#E6EDF3;#63748A;#FF8B96;#88F5B7;#FFE28A;#8FD1FF;#D6B3FF;#98E9F7;#FFFFFF

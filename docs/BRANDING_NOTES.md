@@ -1,15 +1,12 @@
-# chanxOS visual branding refresh
+# chanxOS visual branding notes
 
-This package refresh changes the look and feel of chanxOS to be cleaner and more branded:
+This build refreshes chanxOS with a cleaner and more consistent visual identity:
 
-- Custom chanxOS boot splash and custom boot menu labels.
-- New wallpaper with a calm blue glass aesthetic.
-- Papirus icons for a cleaner desktop icon set.
-- Plank dock autostart for a more modern, macOS-like feel.
-- Inter font for a softer, modern UI.
-- Branded installer, welcome center, and devpack icons.
-- LightDM background and XFCE defaults updated.
+- boot menu and boot splash branded as chanxOS
+- plymouth boot logo theme
+- custom wallpaper and lock-screen background
+- ChanxGlass light theme with Papirus icons
+- centered Plank dock and lighter XFCE panel
+- installer launcher renamed to Install chanxOS
 
-## Notes
-
-This keeps XFCE as the desktop environment, so it is an approximation of a macOS / Cutefish-inspired visual style rather than a literal clone.
+chanxOS remains Debian-based internally, but user-facing branding should appear as chanxOS.

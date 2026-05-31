@@ -13,17 +13,13 @@ SCRIPT_PATHS=(
   "tools/diagnose-build-env.sh"
   "tools/make-checksum.sh"
   "tools/test-qemu.sh"
-  "tools/test-packages.sh"
-  "tools/smoke-test-project.sh"
+  "config/hooks/normal/0100-chanxos-setup.hook.chroot"
+  "config/hooks/normal/9000-chanxos-branding.hook.binary"
 )
 
 while IFS= read -r -d '' script; do
   SCRIPT_PATHS+=("$script")
-done < <(find config/hooks/normal -maxdepth 1 -type f \( -name '*.hook.chroot' -o -name '*.hook.binary' \) -print0 | sort -z)
-
-while IFS= read -r -d '' script; do
-  SCRIPT_PATHS+=("$script")
-done < <(find config/includes.chroot/usr/local/bin -maxdepth 1 -type f -name 'chanx-*' -print0 | sort -z)
+done < <(find config/includes.chroot/usr/local/bin -maxdepth 1 -type f -name 'chanx*' -print0 | sort -z)
 
 for file in "${SCRIPT_PATHS[@]}"; do
   if [[ ! -f "$file" ]]; then

@@ -4,7 +4,7 @@
 
 Initial MVP starter kit:
 
-- chanxOS live-build config.
+- Debian live-build config.
 - XFCE desktop package list.
 - Calamares package entry.
 - chanxOS branding placeholders.

@@ -1,0 +1,4 @@
+[PlankDockItemPreferences]
+Launcher=xfce4-terminal.desktop
+Icon=xfce4-terminal
+Text=Terminal

@@ -1,29 +1,17 @@
-# live-build output
 .build/
-chroot/
-cache/
 binary/
+cache/
+chroot/
 binary.modified_timestamps
 chroot.files
 chroot.packages.install
 chroot.packages.live
-live-image-*
 *.iso
 *.zsync
-wget-log*
-SHA256SUMS
+*.img
+*.buildlog
 chanxos-build.log
-
-# generated live-build config
-config/binary/
-config/bootstrap/
-config/chroot/
-config/common/
-config/source/
-config/hooks/live/
-
-# system/editor
-.DS_Store
-Thumbs.db
+SHA256SUMS*
+wget-log*
 *.swp
-*.tmp
+.DS_Store

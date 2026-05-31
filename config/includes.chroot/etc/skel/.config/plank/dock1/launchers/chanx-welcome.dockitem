@@ -1,2 +1,4 @@
 [PlankDockItemPreferences]
-Launcher=file:///usr/share/applications/chanx-welcome.desktop
+Launcher=chanx-welcome.desktop
+Icon=chanx-welcome
+Text=Welcome

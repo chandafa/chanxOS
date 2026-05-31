@@ -18,16 +18,12 @@ done
 
 if [[ "${#MISSING[@]}" -gt 0 ]]; then
   echo "Dependency build belum lengkap: ${MISSING[*]}"
-  echo "Jalankan:"
-  echo "  ./scripts/install-build-deps.sh"
-  echo "atau:"
-  echo "  sudo apt install -y live-build xorriso squashfs-tools isolinux syslinux-common syslinux-utils debootstrap"
+  echo "Jalankan ./scripts/install-build-deps.sh"
   exit 1
 fi
 
 if [[ $EUID -eq 0 && "${ALLOW_ROOT_BUILD:-0}" != "1" ]]; then
   echo "Jangan jalankan build.sh sebagai root langsung."
-  echo "Pakai user biasa agar file hasil build tidak semuanya owned by root."
   echo "Untuk CI/container, gunakan: ALLOW_ROOT_BUILD=1 ./build.sh"
   exit 1
 fi
@@ -45,28 +41,11 @@ echo "    Output : ${ISO_NAME}"
 
 echo "==> Membersihkan build lama..."
 ${SUDO} lb clean --purge || true
-rm -f ./*.iso ./*.img ./*.list ./*.packages ./*.buildlog chanxos-build.log SHA256SUMS || true
+rm -rf binary cache chroot .build || true
+rm -f ./*.iso ./*.img ./*.list ./*.packages ./*.buildlog chanxos-build.log SHA256SUMS binary.modified_timestamps chroot.files chroot.packages.install chroot.packages.live || true
 
 echo "==> Menyiapkan konfigurasi live-build..."
-lb config \
-  --mode debian \
-  --distribution "${DISTRO}" \
-  --architectures "${ARCH}" \
-  --archive-areas "main contrib non-free non-free-firmware" \
-  --iso-application "chanxOS" \
-  --iso-publisher "chanxOS Project" \
-  --iso-volume "chanxOS 0.1 Alpha" \
-  --binary-images iso-hybrid \
-  --debian-installer live \
-  --apt-recommends true \
-  --apt-options "--yes -o Acquire::Retries=5 -o Acquire::http::No-Cache=true -o Acquire::https::No-Cache=true" \
-  --mirror-bootstrap "http://ftp.debian.org/debian/" \
-  --mirror-chroot "http://ftp.debian.org/debian/" \
-  --mirror-binary "http://ftp.debian.org/debian/" \
-  --firmware-binary true \
-  --firmware-chroot true \
-  --security false \
-  --bootappend-live "boot=live components username=chanx hostname=chanxos quiet splash"
+lb config       --mode debian       --distribution "${DISTRO}"       --architectures "${ARCH}"       --archive-areas "main contrib non-free non-free-firmware"       --binary-images iso-hybrid       --debian-installer live       --apt-recommends false       --apt-options "--yes -o Acquire::Retries=5 -o Acquire::http::No-Cache=true -o Acquire::https::No-Cache=true"       --mirror-bootstrap "http://ftp.debian.org/debian/"       --mirror-chroot "http://ftp.debian.org/debian/"       --mirror-binary "http://ftp.debian.org/debian/"       --firmware-binary true       --firmware-chroot true       --security false       --iso-application "chanxOS"       --iso-publisher "chanxOS Project"       --iso-volume "chanxOS 0.1 Alpha"       --mksquashfs-options "-comp xz -b 1M -Xdict-size 100%"       --bootappend-live "boot=live components username=chanx hostname=chanxos quiet splash"
 
 echo "==> Mulai build ISO. Proses ini bisa lama dan butuh internet stabil."
 ${SUDO} lb build 2>&1 | tee chanxos-build.log

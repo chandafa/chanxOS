@@ -1,6 +1,6 @@
 [Plymouth Theme]
 Name=chanxOS
-Description=chanxOS liquid glass boot splash
+Description=Simple boot theme for chanxOS
 ModuleName=script
 
 [script]

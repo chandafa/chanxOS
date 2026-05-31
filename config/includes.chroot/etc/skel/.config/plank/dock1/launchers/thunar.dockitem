@@ -1,2 +1,4 @@
 [PlankDockItemPreferences]
-Launcher=file:///usr/share/applications/thunar.desktop
+Launcher=thunar.desktop
+Icon=org.xfce.thunar
+Text=Files

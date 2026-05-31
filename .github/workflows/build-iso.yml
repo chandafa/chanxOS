@@ -19,30 +19,24 @@ jobs:
 
       - name: Clean old build artifacts
         run: |
-          sudo rm -rf .build chroot cache binary
-          sudo rm -f binary.modified_timestamps
-          sudo rm -f chroot.files chroot.packages.install chroot.packages.live
-          sudo rm -f live-image-amd64.*
-          sudo rm -f *.iso SHA256SUMS chanxos-build.log wget-log*
+          sudo rm -rf chroot cache binary .build
+          sudo rm -f binary.modified_timestamps chroot.files chroot.packages.install chroot.packages.live
+          sudo rm -f live-image-amd64.* *.iso SHA256SUMS chanxos-build.log wget-log* *.part-*
 
       - name: Build ISO inside Debian 12 container
         run: |
-          docker run --rm --privileged             -v "$PWD":/work             -w /work             debian:12             bash -lc '
+          docker run --rm --privileged                 -v "$PWD":/work                 -w /work                 debian:12                 bash -lc '
               set -e
-
               apt-get update
-              apt-get install -y                 sudo                 git                 live-build                 debootstrap                 xorriso                 squashfs-tools                 isolinux                 syslinux-common                 syslinux-utils                 qemu-system-x86                 ovmf                 ca-certificates                 wget                 curl
-
+              apt-get install -y sudo git live-build debootstrap xorriso squashfs-tools isolinux syslinux-common syslinux-utils qemu-system-x86 ovmf ca-certificates wget curl
               chmod +x build.sh clean.sh || true
               chmod +x scripts/*.sh || true
               chmod +x tools/*.sh || true
               chmod +x config/hooks/normal/*.hook.chroot || true
               chmod +x config/hooks/normal/*.hook.binary || true
-              chmod +x config/includes.chroot/usr/local/bin/chanx-* || true
-
+              chmod +x config/includes.chroot/usr/local/bin/chanx* || true
               ./tools/test-scripts.sh
               ./tools/diagnose-build-env.sh
-
               ALLOW_ROOT_BUILD=1 ./build.sh
             '
 
@@ -56,25 +50,45 @@ jobs:
           echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
           echo "title=chanxOS ${VERSION} (${DATE})" >> "$GITHUB_OUTPUT"
 
+      - name: Prepare release assets
+        id: assets
+        run: |
+          ISO=$(ls -1 *.iso | head -n1)
+          SIZE=$(stat -c%s "$ISO")
+          echo "iso=$ISO" >> "$GITHUB_OUTPUT"
+          if [ "$SIZE" -lt 2147483648 ]; then
+            echo "asset_mode=single" >> "$GITHUB_OUTPUT"
+            echo "asset_glob=$ISO SHA256SUMS chanxos-build.log" >> "$GITHUB_OUTPUT"
+          else
+            split -b 1900M "$ISO" "$ISO.part-"
+            sha256sum "$ISO" > SHA256SUMS
+            sha256sum "$ISO".part-* > SHA256SUMS.parts
+            echo "asset_mode=split" >> "$GITHUB_OUTPUT"
+            echo "asset_glob=$ISO.part-* SHA256SUMS SHA256SUMS.parts chanxos-build.log" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Upload ISO artifact
         uses: actions/upload-artifact@v4
         with:
-          name: chanxOS-0.1-alpha-amd64
+          name: chanxOS-build-output
           path: |
             *.iso
+            *.iso.part-*
             SHA256SUMS
+            SHA256SUMS.parts
             chanxos-build.log
 
       - name: Create GitHub prerelease
-        if: success()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "${{ steps.meta.outputs.tag }}"             *.iso SHA256SUMS chanxos-build.log             --title "${{ steps.meta.outputs.title }}"             --notes "Automated chanxOS liquid glass ISO build.
+          NOTES="Automated chanxOS liquid glass ISO build.
 
           Build info:
           - Version: ${{ steps.meta.outputs.version }}
           - Architecture: amd64
           - Desktop: XFCE with ChanxGlass theme
-          - UI: liquid glass wallpaper, lock screen, centered dock, custom boot splash
-          - Status: experimental alpha release."             --prerelease
+          - UI: liquid glass wallpaper, clean lock screen, centered dock, custom boot splash
+          - Asset mode: ${{ steps.assets.outputs.asset_mode }}
+          - Status: experimental alpha release."
+          gh release create "${{ steps.meta.outputs.tag }}" ${{ steps.assets.outputs.asset_glob }}                 --title "${{ steps.meta.outputs.title }}"                 --notes "$NOTES"                 --prerelease

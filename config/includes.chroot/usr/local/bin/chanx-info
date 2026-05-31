@@ -1,15 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
 echo "========================================"
 echo "             chanxOS 0.1 Alpha          "
 echo "========================================"
 echo "Name       : chanxOS"
-echo "Core       : chanxOS Linux Core"
-echo "Desktop    : XFCE"
+echo "Base       : chanxOS Core"
+echo "Desktop    : XFCE • ChanxGlass"
 echo "Purpose    : Learning, Coding, Productivity"
 echo "Version    : 0.1 Alpha"
-echo "Codename   : Alpha Fox"
+echo "Codename   : Glass Fox"
 echo "========================================"
 echo "Kernel     : $(uname -r)"
 echo "Hostname   : $(hostname)"

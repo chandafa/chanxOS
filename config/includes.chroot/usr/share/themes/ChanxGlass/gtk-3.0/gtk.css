@@ -1,134 +1,40 @@
-/* chanxOS ChanxGlass GTK 3 theme layer */
-@define-color chanx_bg #EFFAFF;
-@define-color chanx_text #173047;
-@define-color chanx_muted #52758A;
-@define-color chanx_accent #1EA7FF;
-
+@define-color chanx_bg rgba(237,245,252,0.92);
+@define-color chanx_panel rgba(255,255,255,0.55);
+@define-color chanx_border rgba(180,205,230,0.9);
+@define-color chanx_text #16324a;
+@define-color chanx_accent #4aa8ff;
 * {
-  -GtkWidget-focus-line-width: 0;
-  -GtkWidget-focus-padding: 0;
-  outline-width: 0;
-  transition: 160ms ease-out;
-}
-
-window, dialog, .background {
-  background-color: alpha(#EFFAFF, 0.96);
-  color: @chanx_text;
-}
-
-.csd, .solid-csd, decoration {
-  border-radius: 18px;
-  box-shadow: 0 22px 60px alpha(#2D7AA8, 0.18);
-}
-
-headerbar, .titlebar {
-  min-height: 40px;
-  border-radius: 18px 18px 0 0;
-  background-image: linear-gradient(to bottom, alpha(#FFFFFF, 0.88), alpha(#FFFFFF, 0.50));
-  border-bottom: 1px solid alpha(#FFFFFF, 0.74);
-  color: @chanx_text;
-  box-shadow: inset 0 1px alpha(#FFFFFF, 0.95);
-}
-
-button, .button {
-  border-radius: 16px;
-  padding: 8px 15px;
-  background-image: linear-gradient(to bottom, alpha(#FFFFFF, 0.88), alpha(#E8F9FF, 0.56));
-  border: 1px solid alpha(#FFFFFF, 0.82);
-  color: @chanx_text;
-  box-shadow: inset 0 1px alpha(#FFFFFF, 0.90), 0 8px 22px alpha(#3D8CB7, 0.10);
-}
-
-button:hover, .button:hover {
-  background-image: linear-gradient(to bottom, #FFFFFF, alpha(#D7F5FF, 0.82));
-  border-color: alpha(#72D8FF, 0.76);
-}
-
-button:checked, button:active, .suggested-action {
-  background-image: linear-gradient(135deg, #83E6FF, #1EA7FF);
-  color: white;
-  border-color: alpha(#FFFFFF, 0.88);
-}
-
-entry, spinbutton, combobox, textview, treeview, list, viewport, scrolledwindow {
-  border-radius: 16px;
-  border: 1px solid alpha(#FFFFFF, 0.74);
-  background-color: alpha(#FFFFFF, 0.66);
-  color: @chanx_text;
-  selection-background-color: #8DE8FF;
-  selection-color: #0C2B44;
-}
-
-notebook > header {
-  background-color: transparent;
-  border: none;
-}
-
-notebook > header tabs tab {
-  border-radius: 16px;
-  padding: 8px 15px;
-  margin: 4px;
-  background-color: alpha(#FFFFFF, 0.34);
-}
-
-notebook > header tabs tab:checked {
-  background-color: alpha(#FFFFFF, 0.76);
-}
-
-menubar, menu, .menu, popover {
-  background-color: alpha(#FFFFFF, 0.88);
-  color: @chanx_text;
-  border: 1px solid alpha(#FFFFFF, 0.76);
-  border-radius: 18px;
-}
-
-menuitem, modelbutton {
   border-radius: 12px;
-  padding: 8px 12px;
+  outline-width: 0;
+  -gtk-outline-radius: 12px;
 }
-
-menuitem:hover, modelbutton:hover {
-  background-color: alpha(#8EE8FF, 0.34);
-}
-
-scrollbar slider {
-  min-width: 8px;
-  min-height: 8px;
-  border-radius: 10px;
-  background-color: alpha(#1EA7FF, 0.42);
-}
-
-tooltip {
-  border-radius: 16px;
-  background-color: alpha(#FFFFFF, 0.90);
-  color: @chanx_text;
-  border: 1px solid alpha(#FFFFFF, 0.76);
-}
-
-/* XFCE panel and app cards */
-.xfce4-panel {
-  background-color: alpha(#FFFFFF, 0.34);
-  color: @chanx_text;
-  border: 1px solid alpha(#FFFFFF, 0.42);
-}
-
-#whiskermenu-window, #applicationmenu-window {
-  background-color: alpha(#FFFFFF, 0.82);
-  border-radius: 24px;
-  border: 1px solid alpha(#FFFFFF, 0.78);
-}
-
-/* LightDM GTK greeter */
-#login_window, #shutdown_dialog, #restart_dialog {
-  border-radius: 32px;
-  background-color: alpha(#FFFFFF, 0.56);
-  border: 1px solid alpha(#FFFFFF, 0.82);
-  box-shadow: 0 26px 70px alpha(#3D89B4, 0.20);
-  padding: 28px;
-}
-
-#panel_window {
-  background-color: alpha(#FFFFFF, 0.32);
-  border-bottom: 1px solid alpha(#FFFFFF, 0.52);
+window, dialog, .background {
+  background-color: @chanx_bg;
   color: @chanx_text;
 }
+headerbar, .titlebar {
+  background: linear-gradient(to bottom, rgba(255,255,255,0.85), rgba(240,248,255,0.72));
+  border: 1px solid rgba(184,210,236,0.8);
+  box-shadow: 0 8px 24px rgba(90,145,190,0.14);
+  color: @chanx_text;
+}
+headerbar button, .titlebar button, button {
+  background: linear-gradient(to bottom, rgba(255,255,255,0.88), rgba(229,241,252,0.88));
+  border: 1px solid rgba(182,208,232,0.95);
+  color: @chanx_text;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);
+  padding: 6px 12px;
+}
+button:hover { background: rgba(255,255,255,0.95); }
+entry, textview, .view, scrolledwindow {
+  background-color: rgba(255,255,255,0.82);
+  border: 1px solid rgba(187,210,232,0.9);
+  color: @chanx_text;
+}
+menubar, menu, .menu, popover, tooltip, notebook > header {
+  background-color: rgba(248,252,255,0.82);
+  border: 1px solid rgba(188,210,232,0.9);
+  color: @chanx_text;
+}
+.sidebar, .navigation-sidebar { background-color: rgba(255,255,255,0.48); }
+selection { background-color: rgba(74,168,255,0.35); }

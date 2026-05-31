@@ -3,3 +3,5 @@ Type=Application
 Name=chanxOS Welcome Center
 Exec=chanx-welcome
 X-GNOME-Autostart-enabled=true
+X-GNOME-Autostart-Delay=8
+Terminal=false

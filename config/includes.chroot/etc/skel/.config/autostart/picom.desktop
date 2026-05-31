@@ -1,8 +1,6 @@
 [Desktop Entry]
 Type=Application
-Name=chanxOS Compositor
-Exec=chanx-compositor
+Name=Picom
+Exec=sh -lc 'picom --config "$HOME/.config/picom/picom.conf"'
 X-GNOME-Autostart-enabled=true
-NoDisplay=false
 Terminal=false
-Hidden=false

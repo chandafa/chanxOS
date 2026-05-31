@@ -1,2 +1,4 @@
 [PlankDockItemPreferences]
-Launcher=file:///usr/share/applications/firefox-esr.desktop
+Launcher=firefox-esr.desktop
+Icon=firefox-esr
+Text=Browser

@@ -1,0 +1,42 @@
+name: Build chanxOS ISO
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'config/**'
+      - 'build.sh'
+      - 'scripts/**'
+      - '.github/workflows/build-iso.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: ./scripts/install-build-deps.sh
+
+      - name: Test scripts
+        run: ./tools/test-scripts.sh
+
+      - name: Diagnose environment
+        run: ./tools/diagnose-build-env.sh
+
+      - name: Build ISO
+        run: ./build.sh
+
+      - name: Upload ISO artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chanxOS-0.1-alpha-amd64
+          path: |
+            chanxOS-0.1-alpha-amd64.iso
+            SHA256SUMS
+            chanxos-build.log
+          if-no-files-found: error

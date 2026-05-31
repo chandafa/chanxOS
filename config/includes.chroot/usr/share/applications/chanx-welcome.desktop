@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=chanxOS Welcome Center
+Comment=Start here with chanxOS
+Exec=chanx-welcome
+Icon=utilities-terminal
+Terminal=false
+Categories=System;Utility;

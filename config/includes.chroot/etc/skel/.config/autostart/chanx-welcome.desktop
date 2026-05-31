@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=chanxOS Welcome Center
+Exec=chanx-welcome
+X-GNOME-Autostart-enabled=true

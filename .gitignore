@@ -1,0 +1,10 @@
+.chroot
+.binary
+.build
+.cache
+*.iso
+*.img
+*.packages
+*.buildlog
+chanxos-build.log
+SHA256SUMS

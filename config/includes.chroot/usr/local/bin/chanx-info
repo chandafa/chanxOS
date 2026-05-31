@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "========================================"
+echo "             chanxOS 0.1 Alpha          "
+echo "========================================"
+echo "Name       : chanxOS"
+echo "Base       : Debian Linux"
+echo "Desktop    : XFCE"
+echo "Purpose    : Learning, Coding, Productivity"
+echo "Version    : 0.1 Alpha"
+echo "Codename   : Alpha Fox"
+echo "========================================"
+echo "Kernel     : $(uname -r)"
+echo "Hostname   : $(hostname)"
+echo "User       : $(whoami)"
+echo "Shell      : ${SHELL:-unknown}"
+echo "========================================"

@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+show_text() {
+  cat <<'TEXT'
+Welcome to chanxOS 0.1 Alpha
+
+Quick commands:
+- chanx-info
+- chanx-update
+- chanx-clean
+- chanx-devpack
+- chanx-study-mode 25
+
+Learning Hub:
+~/ChanxOS-Learning
+TEXT
+}
+
+open_terminal_cmd() {
+  local cmd="$1"
+  if command -v x-terminal-emulator >/dev/null 2>&1; then
+    x-terminal-emulator -e bash -lc "$cmd; echo; read -p 'Press Enter to close...'"
+  else
+    bash -lc "$cmd"
+  fi
+}
+
+if command -v zenity >/dev/null 2>&1 && [[ -n "${DISPLAY:-}" ]]; then
+  while true; do
+    CHOICE=$(zenity --list \
+      --title="Welcome to chanxOS" \
+      --text="chanxOS 0.1 Alpha — Simple Linux for learning, coding, and building." \
+      --column="Menu" --column="Action" \
+      "System Info" "Show chanxOS system information" \
+      "Update System" "Run apt update and upgrade" \
+      "DevPack Installer" "Install developer packages" \
+      "Study Mode" "Start 25-minute focus timer" \
+      "Learning Hub" "Open learning folder" \
+      "Close" "Exit welcome center" \
+      --width=700 --height=360) || exit 0
+
+    case "$CHOICE" in
+      "System Info") open_terminal_cmd "chanx-info" ;;
+      "Update System") open_terminal_cmd "chanx-update" ;;
+      "DevPack Installer") chanx-devpack ;;
+      "Study Mode") open_terminal_cmd "chanx-study-mode 25" ;;
+      "Learning Hub") xdg-open "$HOME/ChanxOS-Learning" >/dev/null 2>&1 || true ;;
+      "Close") exit 0 ;;
+    esac
+  done
+else
+  show_text
+fi

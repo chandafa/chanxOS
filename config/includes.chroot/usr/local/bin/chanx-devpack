@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+install_web() {
+  sudo apt update
+  sudo apt install -y git curl wget nodejs npm build-essential
+}
+
+install_laravel() {
+  sudo apt update
+  sudo apt install -y php php-cli php-mbstring php-xml php-curl php-zip php-mysql composer mariadb-client
+}
+
+install_rust() {
+  sudo apt update
+  sudo apt install -y build-essential curl ca-certificates
+  echo "Rustup installer akan dijalankan. Ikuti instruksi di terminal."
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+}
+
+install_student() {
+  sudo apt update
+  sudo apt install -y libreoffice evince flameshot gparted file-roller unzip zip
+}
+
+terminal_menu() {
+  echo "chanxOS DevPack Installer"
+  echo "1. Web Developer Pack"
+  echo "2. Laravel Pack"
+  echo "3. Rust Pack"
+  echo "4. Student Pack"
+  echo "5. Exit"
+  read -rp "Choose option: " option
+
+  case "$option" in
+    1) install_web ;;
+    2) install_laravel ;;
+    3) install_rust ;;
+    4) install_student ;;
+    5) exit 0 ;;
+    *) echo "Invalid option" ; exit 1 ;;
+  esac
+}
+
+if command -v zenity >/dev/null 2>&1 && [[ -n "${DISPLAY:-}" ]]; then
+  CHOICE=$(zenity --list \
+    --title="chanxOS DevPack Installer" \
+    --text="Pilih paket developer yang ingin di-install:" \
+    --column="Pack" --column="Description" \
+    "Web Developer Pack" "Git, Node.js, npm, build tools" \
+    "Laravel Pack" "PHP, Composer, MariaDB client" \
+    "Rust Pack" "Rustup, Cargo, build tools" \
+    "Student Pack" "LibreOffice, PDF reader, screenshot tools" \
+    --width=640 --height=320) || exit 0
+
+  case "$CHOICE" in
+    "Web Developer Pack") x-terminal-emulator -e bash -lc 'chanx-devpack --web; read -p "Press Enter to close..."' ;;
+    "Laravel Pack") x-terminal-emulator -e bash -lc 'chanx-devpack --laravel; read -p "Press Enter to close..."' ;;
+    "Rust Pack") x-terminal-emulator -e bash -lc 'chanx-devpack --rust; read -p "Press Enter to close..."' ;;
+    "Student Pack") x-terminal-emulator -e bash -lc 'chanx-devpack --student; read -p "Press Enter to close..."' ;;
+  esac
+  exit 0
+fi
+
+case "${1:-}" in
+  --web) install_web ;;
+  --laravel) install_laravel ;;
+  --rust) install_rust ;;
+  --student) install_student ;;
+  *) terminal_menu ;;
+esac

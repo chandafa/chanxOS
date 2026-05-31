@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Install chanxOS
+Comment=Install chanxOS to disk using Calamares
+Exec=install-debian
+Icon=install-debian
+Terminal=false
+Categories=System;
+StartupNotify=true

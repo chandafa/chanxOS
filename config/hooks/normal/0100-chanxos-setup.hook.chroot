@@ -1,0 +1,31 @@
+#!/bin/sh
+set -e
+
+chmod +x /usr/local/bin/chanx-* || true
+
+# Make NetworkManager manage interfaces by default when possible.
+mkdir -p /etc/NetworkManager/conf.d
+cat > /etc/NetworkManager/conf.d/chanxos.conf <<'CFG'
+[main]
+plugins=ifupdown,keyfile
+
+[ifupdown]
+managed=true
+CFG
+
+# LightDM wallpaper hint for GTK greeter.
+mkdir -p /etc/lightdm
+cat > /etc/lightdm/lightdm-gtk-greeter.conf <<'CFG'
+[greeter]
+background=/usr/share/backgrounds/chanxos/wallpaper.svg
+theme-name=Adwaita
+icon-theme-name=Adwaita
+font-name=DejaVu Sans 10
+CFG
+
+# Helpful shell aliases.
+cat > /etc/profile.d/chanxos.sh <<'CFG'
+alias cupdate='chanx-update'
+alias cinfo='chanx-info'
+alias cdev='chanx-devpack'
+CFG

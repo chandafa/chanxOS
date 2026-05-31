@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+MINUTES="${1:-25}"
+
+if ! [[ "$MINUTES" =~ ^[0-9]+$ ]]; then
+  echo "Usage: chanx-study-mode [minutes]"
+  exit 1
+fi
+
+MESSAGE="Study Mode aktif selama ${MINUTES} menit. Fokus dulu, scrolling nanti."
+
+if command -v zenity >/dev/null 2>&1 && [[ -n "${DISPLAY:-}" ]]; then
+  zenity --info --title="chanxOS Study Mode" --text="$MESSAGE" --width=360 || true
+fi
+
+echo "$MESSAGE"
+sleep "$((MINUTES * 60))"
+
+if command -v zenity >/dev/null 2>&1 && [[ -n "${DISPLAY:-}" ]]; then
+  zenity --info --title="chanxOS Study Mode" --text="Waktu fokus selesai. Istirahat 5 menit boleh, compile error jangan dibawa mimpi." --width=420 || true
+else
+  echo "Study Mode selesai."
+fi

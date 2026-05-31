@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "Cleaning chanxOS package cache..."
+sudo apt autoremove -y
+sudo apt autoclean
+echo "Cleanup completed."

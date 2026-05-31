@@ -1,0 +1,17 @@
+git
+curl
+wget
+build-essential
+python3
+python3-pip
+nodejs
+npm
+mariadb-client
+sqlite3
+vim
+nano
+htop
+neofetch
+ca-certificates
+gnupg
+lsb-release

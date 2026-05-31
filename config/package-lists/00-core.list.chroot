@@ -1,0 +1,11 @@
+linux-image-amd64
+live-boot
+live-config
+systemd-sysv
+sudo
+dbus
+network-manager
+wireless-tools
+wpasupplicant
+firmware-linux-free
+firmware-misc-nonfree

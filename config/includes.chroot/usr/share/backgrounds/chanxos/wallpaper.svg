@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#06142E"/>
+      <stop offset="55%" stop-color="#0B3B75"/>
+      <stop offset="100%" stop-color="#3A8DFF"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="75%" cy="25%" r="60%">
+      <stop offset="0%" stop-color="#84C7FF" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#84C7FF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#bg)"/>
+  <rect width="1920" height="1080" fill="url(#glow)"/>
+  <circle cx="1580" cy="210" r="210" fill="#FFFFFF" opacity="0.06"/>
+  <circle cx="1720" cy="370" r="90" fill="#FFFFFF" opacity="0.05"/>
+  <g transform="translate(150 760)">
+    <text x="0" y="0" font-family="Inter, DejaVu Sans, Arial" font-size="92" font-weight="700" fill="#FFFFFF">chanxOS</text>
+    <text x="4" y="62" font-family="Inter, DejaVu Sans, Arial" font-size="28" fill="#D8ECFF">Simple Linux for learning, coding, and building.</text>
+  </g>
+</svg>

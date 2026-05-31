@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=chanxOS DevPack Installer
+Comment=Install developer tool packs
+Exec=chanx-devpack
+Icon=system-software-install
+Terminal=false
+Categories=Development;System;

@@ -69,7 +69,7 @@ lb config \
   --iso-application "chanxOS" \
   --iso-publisher "chanxOS Project" \
   --iso-volume "chanxOS 0.1 Alpha" \
-  --bootappend-live "boot=live components username=chanx hostname=chanxos quiet splash"
+  --bootappend-live "boot=live components username=chanx hostname=chanxos user-fullname=chanxOS quiet splash plymouth.ignore-serial-consoles loglevel=3"
 
 echo "==> Mulai build ISO. Proses ini bisa lama dan butuh internet stabil."
 ${SUDO} lb build 2>&1 | tee chanxos-build.log

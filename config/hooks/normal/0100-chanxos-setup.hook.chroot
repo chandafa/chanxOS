@@ -147,3 +147,20 @@ command -v update-desktop-database >/dev/null 2>&1 && \
   update-desktop-database /usr/share/applications 2>/dev/null || true
 
 echo "[chanxos-setup] Chroot setup complete."
+
+# ── 11. Login hint di greeter ─────────────────────────────────────────────────
+# Tulis hint user/pass ke /etc/issue.net supaya muncul di console
+cat > /etc/issue.net <<'ISSUE'
+chanxOS 0.1 Alpha — Live Session
+Username: chanx  |  Password: live
+ISSUE
+
+# Pastikan LightDM greeter menampilkan hostname (sudah default tapi kita konfirmasi)
+if [ -f /etc/lightdm/lightdm-gtk-greeter.conf ]; then
+  # Tambah/update indicators untuk tampilkan info yang berguna
+  grep -q "^indicators=" /etc/lightdm/lightdm-gtk-greeter.conf || \
+    printf '\nindicators=~host;~spacer;~clock;~spacer;~session;~a11y;~power\n' \
+    >> /etc/lightdm/lightdm-gtk-greeter.conf
+fi
+
+echo "[chanxos-setup] Login hints: done."

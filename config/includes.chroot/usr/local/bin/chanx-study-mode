@@ -1,24 +1,74 @@
 #!/usr/bin/env bash
+# chanxOS Study Mode — Pomodoro Focus Timer
 set -euo pipefail
 
 MINUTES="${1:-25}"
 
-if ! [[ "$MINUTES" =~ ^[0-9]+$ ]]; then
-  echo "Usage: chanx-study-mode [minutes]"
+if ! [[ "$MINUTES" =~ ^[0-9]+$ ]] || [ "$MINUTES" -lt 1 ] || [ "$MINUTES" -gt 180 ]; then
+  echo "Usage: chanx-study-mode [menit]  (1–180, default: 25)"
   exit 1
 fi
 
-MESSAGE="Study Mode aktif selama ${MINUTES} menit. Fokus dulu, scrolling nanti."
+SECONDS_TOTAL=$(( MINUTES * 60 ))
+MSG_START="Study Mode aktif — ${MINUTES} menit.
+Fokus, matikan notifikasi, dan selamat coding!"
+MSG_DONE="Waktu fokus ${MINUTES} menit selesai.
+Istirahat 5 menit, lalu kembali lagi."
+
+# ── Notify start ─────────────────────────────────────────────────
+if command -v notify-send >/dev/null 2>&1 && [[ -n "${DISPLAY:-}" ]]; then
+  notify-send --urgency=low --icon=chanxos-logo \
+    "chanxOS Study Mode" "$MSG_START" 2>/dev/null || true
+elif command -v zenity >/dev/null 2>&1 && [[ -n "${DISPLAY:-}" ]]; then
+  zenity --info --title="chanxOS Study Mode" \
+    --window-icon=chanxos-logo \
+    --text="$MSG_START" --width=360 2>/dev/null &
+fi
+echo "$MSG_START"
+echo ""
+
+# ── Progress countdown ────────────────────────────────────────────
+START_EPOCH=$(date +%s)
+END_EPOCH=$(( START_EPOCH + SECONDS_TOTAL ))
 
 if command -v zenity >/dev/null 2>&1 && [[ -n "${DISPLAY:-}" ]]; then
-  zenity --info --title="chanxOS Study Mode" --text="$MESSAGE" --width=360 || true
+  # Zenity progress bar
+  (
+    while true; do
+      NOW=$(date +%s)
+      ELAPSED=$(( NOW - START_EPOCH ))
+      [ "$ELAPSED" -ge "$SECONDS_TOTAL" ] && { echo "100"; break; }
+      PCT=$(( ELAPSED * 100 / SECONDS_TOTAL ))
+      REMAINING=$(( SECONDS_TOTAL - ELAPSED ))
+      MREM=$(( REMAINING / 60 ))
+      SREM=$(( REMAINING % 60 ))
+      echo "$PCT"
+      printf "# %02d:%02d tersisa\n" "$MREM" "$SREM"
+      sleep 5
+    done
+  ) | zenity --progress \
+      --title="chanxOS Study Mode  ⏱  ${MINUTES} menit" \
+      --window-icon=chanxos-logo \
+      --text="Memulai timer..." \
+      --percentage=0 \
+      --auto-close \
+      --width=380 2>/dev/null || true
+else
+  # CLI countdown
+  echo "Timer: ${MINUTES} menit"
+  sleep "$SECONDS_TOTAL"
 fi
 
-echo "$MESSAGE"
-sleep "$((MINUTES * 60))"
-
+# ── Notify done ───────────────────────────────────────────────────
+echo ""
+echo "$MSG_DONE"
+if command -v notify-send >/dev/null 2>&1 && [[ -n "${DISPLAY:-}" ]]; then
+  notify-send --urgency=normal --icon=chanxos-logo \
+    "Study Mode Selesai!" "$MSG_DONE" 2>/dev/null || true
+fi
 if command -v zenity >/dev/null 2>&1 && [[ -n "${DISPLAY:-}" ]]; then
-  zenity --info --title="chanxOS Study Mode" --text="Waktu fokus selesai. Istirahat 5 menit boleh, compile error jangan dibawa mimpi." --width=420 || true
-else
-  echo "Study Mode selesai."
+  zenity --info \
+    --title="chanxOS Study Mode — Selesai!" \
+    --window-icon=chanxos-logo \
+    --text="$MSG_DONE" --width=360 2>/dev/null || true
 fi

@@ -1,19 +1,22 @@
 
-  ██████╗██╗  ██╗ █████╗ ███╗   ██╗██╗  ██╗ ██████╗ ███████╗
- ██╔════╝██║  ██║██╔══██╗████╗  ██║╚██╗██╔╝██╔═══██╗██╔════╝
- ██║     ███████║███████║██╔██╗ ██║ ╚███╔╝ ██║   ██║███████╗
- ██║     ██╔══██║██╔══██║██║╚██╗██║ ██╔██╗ ██║   ██║╚════██║
- ╚██████╗██║  ██║██║  ██║██║ ╚████║██╔╝ ██╗╚██████╔╝███████║
-  ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝
+  ██████╗██╗  ██╗ █████╗ ███╗  ██╗██╗  ██╗ ██████╗ ███████╗
+ ██╔════╝██║  ██║██╔══██╗████╗ ██║╚██╗██╔╝██╔═══██╗██╔════╝
+ ██║     ███████║███████║██╔██╗██║ ╚███╔╝ ██║   ██║███████╗
+ ██║     ██╔══██║██╔══██║██║╚████║ ██╔██╗ ██║   ██║╚════██║
+ ╚██████╗██║  ██║██║  ██║██║ ╚███║██╔╝╚██╗╚██████╔╝███████║
+  ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚══╝╚═╝  ╚═╝╚═════╝ ╚══════╝
 
-  Version  0.1 Alpha  ·  Codename: Glass Fox
-  Base: Debian 12 Bookworm  ·  Desktop: XFCE + ChanxGlass
+  chanxOS 0.1 Alpha  ·  Codename: Glass Fox
+  Debian 12 Bookworm · XFCE 4 · Liquid Glass UI
 
-  Quick Commands:
-    chanx-info      → System information
-    chanx-update    → Update packages
-    chanx-devpack   → Install developer tools
-    chanx-study-mode [min] → Focus timer
-    chanx-clean     → Clean package cache
-    chanx-install   → Install chanxOS to disk
+  Live Session:  user=chanx  |  password=live
+  ─────────────────────────────────────────────
+  chanx-info       Informasi sistem
+  chanx-update     Update paket
+  chanx-devpack    Install developer tools
+  chanx-study-mode Timer fokus (Pomodoro)
+  chanx-glass      Atur level efek glass
+  chanx-theme      Ganti mode light/dark
+  chanx-install    Install ke disk
+  ─────────────────────────────────────────────
 

@@ -36,7 +36,7 @@ window, .background, dialog {
   margin: 10px;
 }
 
-/* ── Titlebar / Headerbar ────────────────────────────────────── */
+/* ── Titlebar / Headerbar — frosted glass panel ────────────────────────────────────── */
 headerbar,
 .titlebar {
   background: linear-gradient(

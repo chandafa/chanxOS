@@ -1,16 +1,31 @@
 #!/usr/bin/env bash
+# chanxOS Installer Launcher
 set -euo pipefail
+
+# Try Calamares (GUI installer) first
 if command -v calamares >/dev/null 2>&1; then
   if command -v pkexec >/dev/null 2>&1; then
-    exec pkexec calamares
+    exec pkexec env DISPLAY="${DISPLAY:-:0}" XAUTHORITY="${XAUTHORITY:-}" calamares
   elif command -v sudo >/dev/null 2>&1; then
-    exec sudo calamares
+    exec sudo -E calamares
   else
     exec calamares
   fi
-elif command -v install-debian >/dev/null 2>&1; then
-  exec install-debian
-else
-  echo "Installer is not available in this session."
-  exit 1
 fi
+
+# Fallback: Debian text installer
+if command -v debian-installer >/dev/null 2>&1; then
+  exec debian-installer
+fi
+
+# Neither available
+if command -v zenity >/dev/null 2>&1 && [[ -n "${DISPLAY:-}" ]]; then
+  zenity --error \
+    --title="chanxOS Installer" \
+    --window-icon=chanxos-installer \
+    --text="Installer tidak tersedia.\n\nPastikan ISO diboot dengan opsi <b>Pasang chanxOS</b>." \
+    --width=380 2>/dev/null || true
+else
+  echo "Installer tidak tersedia. Boot ulang dengan opsi 'Pasang chanxOS'."
+fi
+exit 1

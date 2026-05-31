@@ -1,8 +1,39 @@
 #!/usr/bin/env bash
+# chanxOS System Updater
 set -euo pipefail
 
-echo "Updating chanxOS packages..."
-sudo apt update
-sudo apt upgrade -y
-sudo apt autoremove -y
-echo "chanxOS update completed."
+CYAN='\033[1;36m'
+GREEN='\033[1;32m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+RESET='\033[0m'
+
+step() { echo -e "\n${CYAN}▶  $1${RESET}"; }
+ok()   { echo -e "${GREEN}✓  $1${RESET}"; }
+warn() { echo -e "${YELLOW}⚠  $1${RESET}"; }
+fail() { echo -e "${RED}✗  $1${RESET}"; }
+
+step "Mengupdate daftar paket..."
+sudo apt update 2>&1 || { fail "apt update gagal"; exit 1; }
+ok "Daftar paket diperbarui"
+
+# Cek apakah ada update tersedia
+UPGRADABLE=$(apt list --upgradable 2>/dev/null | grep -c upgradable || true)
+if [ "${UPGRADABLE:-0}" -le 1 ]; then
+  ok "Semua paket sudah versi terbaru. Tidak ada yang perlu diupdate."
+  exit 0
+fi
+
+step "Mengupgrade paket..."
+sudo apt upgrade -y 2>&1 || { fail "apt upgrade gagal"; exit 1; }
+ok "Upgrade selesai"
+
+step "Membersihkan paket tidak terpakai..."
+sudo apt autoremove -y 2>&1 || warn "autoremove gagal (tidak kritikal)"
+sudo apt autoclean 2>&1 || warn "autoclean gagal (tidak kritikal)"
+ok "Pembersihan selesai"
+
+echo ""
+echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
+echo -e "${GREEN}  chanxOS update selesai!${RESET}"
+echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"

@@ -2,7 +2,7 @@
 
 ## Requirement
 
-Disarankan build di Debian 12/Ubuntu VM.
+Disarankan build di Linux VM yang cocok dengan live-build.
 
 Minimal:
 
@@ -35,7 +35,7 @@ qemu-system-x86_64 -m 4096 -cdrom chanxOS-0.1-alpha-amd64.iso -boot d
 
 1. Buat VM baru.
 2. Type: Linux.
-3. Version: Debian 64-bit.
+3. Version: Linux 64-bit.
 4. RAM: 4096 MB.
 5. Attach ISO chanxOS.
 6. Boot.

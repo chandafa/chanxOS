@@ -1,0 +1,7 @@
+gtk-theme-name="ChanxGlass"
+gtk-icon-theme-name="Papirus"
+gtk-font-name="Inter 10"
+gtk-cursor-theme-name="Adwaita"
+gtk-toolbar-style=GTK_TOOLBAR_ICONS
+gtk-button-images=1
+gtk-menu-images=1

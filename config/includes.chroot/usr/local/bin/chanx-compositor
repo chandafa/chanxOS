@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+CONFIG="${HOME}/.config/picom/picom.conf"
+
+if ! command -v picom >/dev/null 2>&1; then
+  exit 0
+fi
+
+# Try chanxOS glass config first. If the local picom build rejects a blur option,
+# fall back to safe defaults instead of breaking login/autostart.
+if [[ -f "$CONFIG" ]]; then
+  picom --config "$CONFIG" >/tmp/chanxos-picom.log 2>&1 || picom >/tmp/chanxos-picom-fallback.log 2>&1 || true
+else
+  picom >/tmp/chanxos-picom-fallback.log 2>&1 || true
+fi

@@ -1,6 +1,6 @@
 # chanxOS MVP Starter Kit
 
-**chanxOS** adalah starter project untuk membuat ISO Linux custom berbasis Debian dengan GUI, installer, branding, dan fitur MVP sederhana.
+**chanxOS** adalah starter project untuk membuat ISO Linux custom chanxOS dengan GUI, installer, branding, dan fitur MVP sederhana.
 
 Target awal:
 
@@ -30,7 +30,7 @@ chanxos-mvp-starter/
 
 ## Cara build yang disarankan
 
-### Opsi 1 — Build lokal di VM Debian/Ubuntu
+### Opsi 1 — Build lokal di VM Linux
 
 ```bash
 sudo apt update
@@ -67,7 +67,7 @@ docs/BUILD_ON_GITHUB.md
 
 ## Cara build cepat
 
-Gunakan Debian/Ubuntu VM. Jalankan:
+Gunakan VM Linux build environment. Jalankan:
 
 ```bash
 sudo apt update
@@ -97,13 +97,13 @@ username: chanx
 hostname: chanxos
 ```
 
-Jika password diminta pada sesi live, coba kosongkan atau gunakan user live sesuai konfigurasi Debian Live.
+Jika password diminta pada sesi live, coba kosongkan atau gunakan user live sesuai konfigurasi chanxOS Live.
 
 ## Catatan penting
 
 - Build ISO butuh Linux environment, internet, dan ruang disk cukup besar.
 - Jalankan di VM agar aman.
-- Calamares mungkin perlu konfigurasi tambahan tergantung versi Debian/Ubuntu yang dipakai.
+- Calamares mungkin perlu konfigurasi tambahan tergantung versi upstream package yang dipakai.
 - Jangan gunakan untuk mesin utama sebelum diuji berkali-kali di VM.
 
 ## Testing tanpa full build
@@ -115,7 +115,7 @@ Panduan ada di `docs/TESTING_WORKFLOW.md`. Jalankan minimal:
 ./tools/diagnose-build-env.sh
 ```
 
-Untuk validasi package list di VM Debian 12/bookworm:
+Untuk validasi package list di build VM:
 
 ```bash
 ./tools/test-packages.sh

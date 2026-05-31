@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Install chanxOS
+Comment=Install chanxOS to disk using the graphical installer
+Exec=install-debian
+Icon=chanxos-installer
+Terminal=false
+Categories=System;
+StartupNotify=true

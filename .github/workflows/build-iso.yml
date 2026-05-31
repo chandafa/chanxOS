@@ -6,6 +6,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,7 +19,7 @@ jobs:
 
       - name: Clean old build artifacts
         run: |
-          sudo rm -rf chroot cache binary
+          sudo rm -rf .build chroot cache binary
           sudo rm -f binary.modified_timestamps
           sudo rm -f chroot.files chroot.packages.install chroot.packages.live
           sudo rm -f live-image-amd64.*
@@ -24,34 +27,17 @@ jobs:
 
       - name: Build ISO inside Debian 12 container
         run: |
-          docker run --rm --privileged \
-            -v "$PWD":/work \
-            -w /work \
-            debian:12 \
-            bash -lc '
+          docker run --rm --privileged             -v "$PWD":/work             -w /work             debian:12             bash -lc '
               set -e
 
               apt-get update
-              apt-get install -y \
-                sudo \
-                git \
-                live-build \
-                debootstrap \
-                xorriso \
-                squashfs-tools \
-                isolinux \
-                syslinux-common \
-                syslinux-utils \
-                qemu-system-x86 \
-                ovmf \
-                ca-certificates \
-                wget \
-                curl
+              apt-get install -y                 sudo                 git                 live-build                 debootstrap                 xorriso                 squashfs-tools                 isolinux                 syslinux-common                 syslinux-utils                 qemu-system-x86                 ovmf                 ca-certificates                 wget                 curl
 
               chmod +x build.sh clean.sh || true
               chmod +x scripts/*.sh || true
               chmod +x tools/*.sh || true
               chmod +x config/hooks/normal/*.hook.chroot || true
+              chmod +x config/hooks/normal/*.hook.binary || true
               chmod +x config/includes.chroot/usr/local/bin/chanx-* || true
 
               ./tools/test-scripts.sh
@@ -59,6 +45,16 @@ jobs:
 
               ALLOW_ROOT_BUILD=1 ./build.sh
             '
+
+      - name: Prepare release metadata
+        id: meta
+        run: |
+          VERSION="0.1-alpha"
+          DATE="$(date +'%Y%m%d-%H%M')"
+          TAG="v${VERSION}-${DATE}"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+          echo "title=chanxOS ${VERSION} (${DATE})" >> "$GITHUB_OUTPUT"
 
       - name: Upload ISO artifact
         uses: actions/upload-artifact@v4
@@ -68,3 +64,17 @@ jobs:
             *.iso
             SHA256SUMS
             chanxos-build.log
+
+      - name: Create GitHub prerelease
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ steps.meta.outputs.tag }}"             *.iso SHA256SUMS chanxos-build.log             --title "${{ steps.meta.outputs.title }}"             --notes "Automated chanxOS liquid glass ISO build.
+
+          Build info:
+          - Version: ${{ steps.meta.outputs.version }}
+          - Architecture: amd64
+          - Desktop: XFCE with ChanxGlass theme
+          - UI: liquid glass wallpaper, lock screen, centered dock, custom boot splash
+          - Status: experimental alpha release."             --prerelease

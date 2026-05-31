@@ -1,21 +1,70 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+<svg xmlns="http://www.w3.org/2000/svg" width="2560" height="1600" viewBox="0 0 2560 1600">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#06142E"/>
-      <stop offset="55%" stop-color="#0B3B75"/>
-      <stop offset="100%" stop-color="#3A8DFF"/>
+      <stop offset="0%" stop-color="#F8FCFF"/>
+      <stop offset="42%" stop-color="#DDF5FF"/>
+      <stop offset="100%" stop-color="#92DBFF"/>
     </linearGradient>
-    <radialGradient id="glow" cx="75%" cy="25%" r="60%">
-      <stop offset="0%" stop-color="#84C7FF" stop-opacity="0.45"/>
-      <stop offset="100%" stop-color="#84C7FF" stop-opacity="0"/>
+    <radialGradient id="a" cx="15%" cy="18%" r="48%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
     </radialGradient>
+    <radialGradient id="b" cx="85%" cy="22%" r="46%">
+      <stop offset="0%" stop-color="#86E8FF" stop-opacity="0.44"/>
+      <stop offset="100%" stop-color="#86E8FF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="c" cx="70%" cy="86%" r="52%">
+      <stop offset="0%" stop-color="#B2B7FF" stop-opacity="0.30"/>
+      <stop offset="100%" stop-color="#B2B7FF" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="34"/>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.64"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.22"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#48D7FF"/>
+      <stop offset="100%" stop-color="#168BFF"/>
+    </linearGradient>
   </defs>
-  <rect width="1920" height="1080" fill="url(#bg)"/>
-  <rect width="1920" height="1080" fill="url(#glow)"/>
-  <circle cx="1580" cy="210" r="210" fill="#FFFFFF" opacity="0.06"/>
-  <circle cx="1720" cy="370" r="90" fill="#FFFFFF" opacity="0.05"/>
-  <g transform="translate(150 760)">
-    <text x="0" y="0" font-family="Inter, DejaVu Sans, Arial" font-size="92" font-weight="700" fill="#FFFFFF">chanxOS</text>
-    <text x="4" y="62" font-family="Inter, DejaVu Sans, Arial" font-size="28" fill="#D8ECFF">Simple Linux for learning, coding, and building.</text>
+  <rect width="2560" height="1600" fill="url(#bg)"/>
+  <rect width="2560" height="1600" fill="url(#a)"/>
+  <rect width="2560" height="1600" fill="url(#b)"/>
+  <rect width="2560" height="1600" fill="url(#c)"/>
+  <circle cx="360" cy="330" r="210" fill="#FFFFFF" opacity="0.60" filter="url(#blur)"/>
+  <circle cx="2110" cy="360" r="290" fill="#62DFFF" opacity="0.22" filter="url(#blur)"/>
+  <circle cx="1820" cy="1280" r="350" fill="#7F9CFF" opacity="0.13" filter="url(#blur)"/>
+
+  <g transform="translate(190,180)">
+    <rect width="840" height="316" rx="52" fill="url(#glass)" stroke="#FFFFFF" stroke-opacity="0.78"/>
+    <circle cx="116" cy="118" r="52" fill="url(#blue)"/>
+    <text x="99" y="139" font-family="Inter, SF Pro Display, DejaVu Sans, Arial" font-size="72" font-weight="800" fill="#FFFFFF">C</text>
+    <text x="198" y="132" font-family="Inter, SF Pro Display, DejaVu Sans, Arial" font-size="76" font-weight="800" fill="#12344D">chanxOS</text>
+    <text x="202" y="186" font-family="Inter, SF Pro Display, DejaVu Sans, Arial" font-size="27" fill="#527992">Liquid glass workspace for learning and building.</text>
+    <rect x="198" y="224" width="152" height="44" rx="22" fill="#FFFFFF" fill-opacity="0.42" stroke="#FFFFFF" stroke-opacity="0.86"/>
+    <text x="225" y="253" font-family="Inter, DejaVu Sans, Arial" font-size="20" font-weight="700" fill="#174362">Clean</text>
+    <rect x="368" y="224" width="174" height="44" rx="22" fill="#FFFFFF" fill-opacity="0.42" stroke="#FFFFFF" stroke-opacity="0.86"/>
+    <text x="395" y="253" font-family="Inter, DejaVu Sans, Arial" font-size="20" font-weight="700" fill="#174362">Minimal</text>
+    <rect x="560" y="224" width="214" height="44" rx="22" fill="#FFFFFF" fill-opacity="0.42" stroke="#FFFFFF" stroke-opacity="0.86"/>
+    <text x="588" y="253" font-family="Inter, DejaVu Sans, Arial" font-size="20" font-weight="700" fill="#174362">Liquid glass</text>
   </g>
+
+  <g transform="translate(1440,270)">
+    <rect width="760" height="980" rx="60" fill="#FFFFFF" fill-opacity="0.28" stroke="#FFFFFF" stroke-opacity="0.78"/>
+    <rect x="42" y="42" width="676" height="896" rx="46" fill="#FFFFFF" fill-opacity="0.22" stroke="#FFFFFF" stroke-opacity="0.65"/>
+    <rect x="96" y="116" width="568" height="102" rx="32" fill="#FFFFFF" fill-opacity="0.46"/>
+    <circle cx="148" cy="167" r="13" fill="#FF7B7B"/>
+    <circle cx="184" cy="167" r="13" fill="#FFD66B"/>
+    <circle cx="220" cy="167" r="13" fill="#5FE091"/>
+    <rect x="96" y="276" width="260" height="210" rx="36" fill="#FFFFFF" fill-opacity="0.36"/>
+    <rect x="404" y="276" width="260" height="210" rx="36" fill="#FFFFFF" fill-opacity="0.30"/>
+    <rect x="96" y="532" width="568" height="168" rx="36" fill="#FFFFFF" fill-opacity="0.34"/>
+    <rect x="96" y="746" width="568" height="96" rx="30" fill="#FFFFFF" fill-opacity="0.38"/>
+    <rect x="146" y="342" width="150" height="50" rx="25" fill="url(#blue)" opacity="0.96"/>
+    <text x="142" y="880" font-family="Inter, DejaVu Sans, Arial" font-size="24" fill="#244A62" opacity="0.86">Soft panels. Centered dock. Calm defaults.</text>
+  </g>
+
+  <text x="190" y="1452" font-family="Inter, DejaVu Sans, Arial" font-size="25" fill="#335D76" opacity="0.74">chanxOS 0.1 Alpha • clean visual identity • no upstream desktop branding</text>
 </svg>

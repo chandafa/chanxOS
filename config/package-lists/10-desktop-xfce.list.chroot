@@ -7,3 +7,14 @@ pulseaudio
 pavucontrol
 fonts-dejavu
 fonts-liberation
+papirus-icon-theme
+plank
+fonts-inter
+picom
+light-locker
+arc-theme
+python3-gi
+gir1.2-gtk-3.0
+gtk2-engines-murrine
+plymouth
+plymouth-themes

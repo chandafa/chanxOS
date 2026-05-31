@@ -10,7 +10,7 @@ Gunakan test bertingkat agar tidak perlu build ISO setiap kali edit.
 
 ## 2. Test package list
 
-Jalankan di Debian 12/bookworm build VM:
+Jalankan di build VM:
 
 ```bash
 ./tools/test-packages.sh

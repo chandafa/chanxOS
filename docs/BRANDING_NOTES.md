@@ -1,15 +1,15 @@
-# Branding Notes
+# chanxOS visual branding refresh
 
-Ganti file berikut untuk branding asli:
+This package refresh changes the look and feel of chanxOS to be cleaner and more branded:
 
-- `branding/wallpaper.svg`
-- `config/includes.chroot/usr/share/backgrounds/chanxos/wallpaper.svg`
-- `/etc/os-release`
-- `/etc/issue`
-- `/etc/motd`
+- Custom chanxOS boot splash and custom boot menu labels.
+- New wallpaper with a calm blue glass aesthetic.
+- Papirus icons for a cleaner desktop icon set.
+- Plank dock autostart for a more modern, macOS-like feel.
+- Inter font for a softer, modern UI.
+- Branded installer, welcome center, and devpack icons.
+- LightDM background and XFCE defaults updated.
 
-Catatan:
+## Notes
 
-- Jangan mengklaim sebagai distro resmi Debian.
-- Tulis jelas: chanxOS is based on Debian.
-- Gunakan logo sendiri.
+This keeps XFCE as the desktop environment, so it is an approximation of a macOS / Cutefish-inspired visual style rather than a literal clone.

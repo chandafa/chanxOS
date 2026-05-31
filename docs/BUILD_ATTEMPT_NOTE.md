@@ -1,6 +1,6 @@
 # Build Attempt Note
 
-Starter kit ini sudah disiapkan untuk build ISO dengan Debian `live-build`.
+Starter kit ini sudah disiapkan untuk build ISO dengan live-build.
 
 Environment ChatGPT/container yang digunakan saat menyiapkan project ini belum bisa menghasilkan ISO final karena dependency berikut tidak tersedia:
 
@@ -17,7 +17,7 @@ Akses `apt update` pada environment tersebut juga timeout, sehingga dependency t
 
 Gunakan salah satu jalur berikut:
 
-1. Build lokal di VM Debian/Ubuntu:
+1. Build lokal di VM Linux:
 
 ```bash
 ./scripts/install-build-deps.sh

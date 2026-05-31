@@ -53,6 +53,9 @@ lb config \
   --distribution "${DISTRO}" \
   --architectures "${ARCH}" \
   --archive-areas "main contrib non-free non-free-firmware" \
+  --iso-application "chanxOS" \
+  --iso-publisher "chanxOS Project" \
+  --iso-volume "chanxOS 0.1 Alpha" \
   --binary-images iso-hybrid \
   --debian-installer live \
   --apt-recommends true \

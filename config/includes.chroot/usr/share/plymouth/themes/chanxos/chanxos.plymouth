@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=chanxOS
+Description=chanxOS liquid glass boot splash
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/chanxos
+ScriptFile=/usr/share/plymouth/themes/chanxos/chanxos.script

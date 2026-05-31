@@ -1,5 +1,5 @@
-cat > .gitignore <<'EOF'
 # live-build output
+.build/
 chroot/
 cache/
 binary/
@@ -11,6 +11,8 @@ live-image-*
 *.iso
 *.zsync
 wget-log*
+SHA256SUMS
+chanxos-build.log
 
 # generated live-build config
 config/binary/
@@ -25,6 +27,3 @@ config/hooks/live/
 Thumbs.db
 *.swp
 *.tmp
-EOF
-
-

@@ -1,0 +1,41 @@
+#!/bin/sh
+set -e
+
+BRAND="chanxOS 0.1 Alpha"
+
+# Copy clean boot splash into generated boot trees when those paths exist.
+if [ -d binary/isolinux ] && [ -f config/bootloaders/isolinux/splash.png ]; then
+  cp -f config/bootloaders/isolinux/splash.png binary/isolinux/splash.png || true
+fi
+
+if [ -d binary/boot/grub ] && [ -f config/bootloaders/grub-efi/splash.png ]; then
+  cp -f config/bootloaders/grub-efi/splash.png binary/boot/grub/splash.png || true
+fi
+
+# Patch visible boot text from upstream defaults to chanxOS.
+find binary -type f \( -name "*.cfg" -o -name "*.txt" \) 2>/dev/null | while read -r file; do
+  sed -i     -e 's/Debian GNU\/Linux/chanxOS/g'     -e 's/Debian Live/chanxOS Live/g'     -e 's/Install Debian/Install chanxOS/g'     -e 's/Start installer/Install chanxOS/g'     -e 's/Live system/Live chanxOS/g'     -e 's/Advanced install options/Advanced chanxOS options/g'     -e 's/Utilities/chanxOS Utilities/g'     "$file" || true
+done
+
+# Strong override for BIOS/ISOLINUX menu title if generated menu.cfg exists.
+if [ -f binary/isolinux/menu.cfg ]; then
+  if grep -q '^MENU TITLE' binary/isolinux/menu.cfg; then
+    sed -i "s/^MENU TITLE.*/MENU TITLE ${BRAND}/" binary/isolinux/menu.cfg || true
+  else
+    sed -i "1i MENU TITLE ${BRAND}" binary/isolinux/menu.cfg || true
+  fi
+fi
+
+# Strong override for GRUB title if generated config exists.
+if [ -f binary/boot/grub/grub.cfg ]; then
+  sed -i     -e 's/menuentry "Live system/menuentry "Live chanxOS/g'     -e 's/menuentry "Start installer/menuentry "Install chanxOS/g'     -e 's/Debian GNU\/Linux/chanxOS/g'     binary/boot/grub/grub.cfg || true
+
+  if ! grep -q 'background_image /boot/grub/splash.png' binary/boot/grub/grub.cfg; then
+    sed -i '1i if background_image /boot/grub/splash.png; then\n  set color_normal=black/black\n  set color_highlight=white/light-blue\nfi' binary/boot/grub/grub.cfg || true
+  fi
+fi
+
+# Make ISO metadata text files avoid upstream visible names where possible.
+find binary -type f \( -name "*.info" -o -name "*.manifest" -o -name "*.txt" \) 2>/dev/null | while read -r file; do
+  sed -i     -e 's/Debian GNU\/Linux/chanxOS/g'     -e 's/Debian/chanxOS/g'     "$file" || true
+done

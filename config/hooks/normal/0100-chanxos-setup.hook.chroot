@@ -13,14 +13,21 @@ plugins=ifupdown,keyfile
 managed=true
 CFG
 
-# LightDM wallpaper hint for GTK greeter.
+# chanxOS login / lock screen branding.
 mkdir -p /etc/lightdm
 cat > /etc/lightdm/lightdm-gtk-greeter.conf <<'CFG'
 [greeter]
-background=/usr/share/backgrounds/chanxos/wallpaper.svg
-theme-name=Adwaita
-icon-theme-name=Adwaita
-font-name=DejaVu Sans 10
+background=/usr/share/backgrounds/chanxos/lockscreen.svg
+theme-name=ChanxGlass
+icon-theme-name=Papirus
+font-name=Inter 10
+cursor-theme-name=Adwaita
+clock-format=%a, %d %b  %H:%M
+indicators=~host;~spacer;~clock;~spacer;~session;~language;~power
+position=50%,center 50%,center
+user-background=false
+xft-antialias=true
+xft-dpi=96
 CFG
 
 # Helpful shell aliases.
@@ -29,3 +36,45 @@ alias cupdate='chanx-update'
 alias cinfo='chanx-info'
 alias cdev='chanx-devpack'
 CFG
+
+# Replace visible upstream installer launcher text with chanxOS branding.
+if [ -f /usr/share/applications/install-debian.desktop ]; then
+  sed -i 's/^Name=.*/Name=Install chanxOS/' /usr/share/applications/install-debian.desktop || true
+  sed -i 's/^GenericName=.*/GenericName=chanxOS Installer/' /usr/share/applications/install-debian.desktop || true
+  sed -i 's/^Comment=.*/Comment=Install chanxOS to disk using the graphical installer/' /usr/share/applications/install-debian.desktop || true
+  if grep -q '^Icon=' /usr/share/applications/install-debian.desktop; then
+    sed -i 's|^Icon=.*|Icon=chanxos-installer|' /usr/share/applications/install-debian.desktop || true
+  else
+    printf '\nIcon=chanxos-installer\n' >> /usr/share/applications/install-debian.desktop
+  fi
+fi
+
+# Add chanxOS installer launcher for dock/menu.
+cat > /usr/share/applications/chanxos-installer.desktop <<'CFG'
+[Desktop Entry]
+Type=Application
+Name=Install chanxOS
+Comment=Install chanxOS to disk using the graphical installer
+Exec=install-debian
+Icon=chanxos-installer
+Terminal=false
+Categories=System;
+StartupNotify=true
+CFG
+
+# Set chanxOS Plymouth splash if available.
+if command -v plymouth-set-default-theme >/dev/null 2>&1; then
+  plymouth-set-default-theme chanxos || true
+  if command -v update-initramfs >/dev/null 2>&1; then
+    update-initramfs -u || true
+  fi
+fi
+
+# Keep desktop clean; launchers live in the centered dock/menu.
+mkdir -p /etc/skel/Desktop
+cp -f /usr/share/applications/chanx-welcome.desktop /etc/skel/Desktop/chanxOS\ Welcome.desktop || true
+chmod +x /etc/skel/Desktop/chanxOS\ Welcome.desktop || true
+
+# Desktop database and icon cache if available.
+command -v update-desktop-database >/dev/null 2>&1 && update-desktop-database /usr/share/applications || true
+command -v gtk-update-icon-cache >/dev/null 2>&1 && gtk-update-icon-cache -f /usr/share/icons/hicolor || true

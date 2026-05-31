@@ -59,6 +59,11 @@ lb config \
   --firmware-binary true \
   --firmware-chroot true \
   --bootappend-live "boot=live components username=chanx hostname=chanxos quiet splash"
+  --mirror-bootstrap "http://deb.debian.org/debian/" \
+  --mirror-chroot "http://deb.debian.org/debian/" \
+  --mirror-binary "http://deb.debian.org/debian/" \
+  --updates true \
+  --security false \
 
 echo "==> Mulai build ISO. Proses ini bisa lama dan butuh internet stabil."
 ${SUDO} lb build 2>&1 | tee chanxos-build.log

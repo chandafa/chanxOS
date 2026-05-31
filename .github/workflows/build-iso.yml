@@ -3,40 +3,68 @@ name: Build chanxOS ISO
 on:
   workflow_dispatch:
   push:
-    branches: [ main, master ]
-    paths:
-      - 'config/**'
-      - 'build.sh'
-      - 'scripts/**'
-      - '.github/workflows/build-iso.yml'
+    branches:
+      - main
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
-    timeout-minutes: 180
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install build dependencies
-        run: ./scripts/install-build-deps.sh
+      - name: Clean old build artifacts
+        run: |
+          sudo rm -rf chroot cache binary
+          sudo rm -f binary.modified_timestamps
+          sudo rm -f chroot.files chroot.packages.install chroot.packages.live
+          sudo rm -f live-image-amd64.*
+          sudo rm -f *.iso SHA256SUMS chanxos-build.log wget-log*
 
-      - name: Test scripts
-        run: ./tools/test-scripts.sh
+      - name: Build ISO inside Debian 12 container
+        run: |
+          docker run --rm --privileged \
+            -v "$PWD":/work \
+            -w /work \
+            debian:12 \
+            bash -lc '
+              set -e
 
-      - name: Diagnose environment
-        run: ./tools/diagnose-build-env.sh
+              apt-get update
+              apt-get install -y \
+                sudo \
+                git \
+                live-build \
+                debootstrap \
+                xorriso \
+                squashfs-tools \
+                isolinux \
+                syslinux-common \
+                syslinux-utils \
+                qemu-system-x86 \
+                ovmf \
+                ca-certificates \
+                wget \
+                curl
 
-      - name: Build ISO
-        run: ./build.sh
+              chmod +x build.sh clean.sh || true
+              chmod +x scripts/*.sh || true
+              chmod +x tools/*.sh || true
+              chmod +x config/hooks/normal/*.hook.chroot || true
+              chmod +x config/includes.chroot/usr/local/bin/chanx-* || true
+
+              ./tools/test-scripts.sh
+              ./tools/diagnose-build-env.sh
+
+              ALLOW_ROOT_BUILD=1 ./build.sh
+            '
 
       - name: Upload ISO artifact
         uses: actions/upload-artifact@v4
         with:
           name: chanxOS-0.1-alpha-amd64
           path: |
-            chanxOS-0.1-alpha-amd64.iso
+            *.iso
             SHA256SUMS
             chanxos-build.log
-          if-no-files-found: error

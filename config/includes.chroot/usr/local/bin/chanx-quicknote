@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# chanxOS QuickNote — Catatan cepat tersimpan persisten
+set -euo pipefail
+
+NOTES_DIR="${HOME}/.config/chanxos/notes"
+mkdir -p "$NOTES_DIR"
+NOTE_FILE="${NOTES_DIR}/quicknote.txt"
+[ -f "$NOTE_FILE" ] || touch "$NOTE_FILE"
+
+# CLI mode: chanx-quicknote add "teks"
+if [[ "${1:-}" == "add" ]]; then
+  shift
+  printf '[%s] %s\n' "$(date '+%Y-%m-%d %H:%M')" "$*" >> "$NOTE_FILE"
+  echo "Catatan ditambahkan."
+  exit 0
+fi
+if [[ "${1:-}" == "list" ]]; then
+  cat "$NOTE_FILE"
+  exit 0
+fi
+if [[ "${1:-}" == "clear" ]]; then
+  > "$NOTE_FILE"
+  echo "Catatan dihapus."
+  exit 0
+fi
+
+# GUI: buka dengan teks editor
+if [[ -n "${DISPLAY:-}" ]]; then
+  if command -v mousepad >/dev/null 2>&1; then
+    mousepad "$NOTE_FILE" &
+  elif command -v gedit >/dev/null 2>&1; then
+    gedit "$NOTE_FILE" &
+  elif command -v xfce4-terminal >/dev/null 2>&1; then
+    xfce4-terminal --hide-menubar -T "chanxOS QuickNote" \
+      -e "nano '$NOTE_FILE'" &
+  else
+    nano "$NOTE_FILE"
+  fi
+else
+  nano "$NOTE_FILE"
+fi

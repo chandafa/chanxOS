@@ -2,9 +2,9 @@
 Alignment='Center'
 AutoHide=false
 CurrentWorkspaceOnly=false
-DockItems=['xfce4-terminal.dockitem', 'thunar.dockitem', 'mousepad.dockitem', 'firefox-esr.dockitem', 'chanx-welcome.dockitem', 'chanx-devpack.dockitem', 'chanx-install.dockitem']
+DockItems=['xfce4-terminal.dockitem','thunar.dockitem','firefox-esr.dockitem','mousepad.dockitem','chanx-welcome.dockitem','chanx-snap.dockitem','chanx-quicknote.dockitem','chanx-install.dockitem']
 HideDelay=250
-IconSize=52
+IconSize=50
 LockItems=false
 Monitor=''
 Offset=0

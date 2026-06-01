@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# chanxOS Color Picker — ambil warna dari titik mana saja di layar
+set -euo pipefail
+
+if ! command -v xdotool >/dev/null 2>&1 && ! command -v gpick >/dev/null 2>&1; then
+  if [[ -n "${DISPLAY:-}" ]] && command -v zenity >/dev/null 2>&1; then
+    zenity --info --title="chanxOS Color Picker" \
+      --text="Color picker belum terinstall.\n\nInstall dengan:\nsudo apt install gpick" \
+      --width=340 2>/dev/null || true
+  else
+    echo "Install: sudo apt install gpick"
+  fi
+  exit 0
+fi
+
+if command -v gpick >/dev/null 2>&1; then
+  gpick &
+elif command -v zenity >/dev/null 2>&1 && [[ -n "${DISPLAY:-}" ]]; then
+  COLOR=$(zenity --color-selection --title="chanxOS Color Picker" 2>/dev/null) || exit 0
+  echo "$COLOR" | xclip -selection clipboard 2>/dev/null || \
+    echo "$COLOR" | xsel --clipboard --input 2>/dev/null || true
+  notify-send "Color Picker" "Warna $COLOR disalin ke clipboard" \
+    --icon=chanxos-logo 2>/dev/null || true
+fi

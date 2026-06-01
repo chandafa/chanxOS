@@ -1,11 +1,23 @@
+# chanxOS Core System
 linux-image-amd64
 live-boot
 live-config
+live-config-systemd
 systemd-sysv
 sudo
 dbus
+openssl
+ca-certificates
 network-manager
 wireless-tools
 wpasupplicant
 firmware-linux-free
 firmware-misc-nonfree
+locales
+tzdata
+keyboard-configuration
+console-setup
+bash-completion
+curl
+wget
+git

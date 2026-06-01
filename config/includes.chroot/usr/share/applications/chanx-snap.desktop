@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=chanxOS Snap
+Comment=Screenshot dengan pilihan mode
+Exec=chanx-snap
+Icon=xfce4-screenshooter
+Terminal=false
+Categories=Graphics;Utility;
+Keywords=screenshot;screen;capture;

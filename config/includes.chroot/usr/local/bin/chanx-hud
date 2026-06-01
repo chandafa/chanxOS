@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+# chanxOS HUD — Fitur UNIK: Overlay info real-time di desktop
+# Menampilkan waktu, CPU, RAM, IP langsung di atas wallpaper (via xfce4-genmon atau conky-fallback)
+# Tidak ada di Ubuntu/Fedora/Mint by default.
+set -euo pipefail
+
+CONF="${HOME}/.config/chanxos/hud.conf"
+STATE="${HOME}/.config/chanxos/hud-enabled"
+mkdir -p "${HOME}/.config/chanxos"
+
+start_conky_hud() {
+  pkill conky 2>/dev/null || true
+  sleep 0.5
+  cat > "${HOME}/.config/chanxos/hud.conkyrc" << 'CONKY'
+conky.config = {
+  alignment        = 'top_right',
+  background       = true,
+  border_width     = 0,
+  cpu_avg_samples  = 2,
+  default_color    = 'white',
+  default_outline_color = 'black',
+  double_buffer    = true,
+  draw_borders     = false,
+  draw_graph_borders = false,
+  draw_outline     = false,
+  draw_shades      = false,
+  extra_newline    = false,
+  font             = 'Inter:size=9',
+  gap_x            = 18,
+  gap_y            = 46,
+  minimum_height   = 5,
+  minimum_width    = 200,
+  net_avg_samples  = 2,
+  no_buffers       = true,
+  out_to_console   = false,
+  out_to_stderr    = false,
+  own_window       = true,
+  own_window_type  = 'desktop',
+  own_window_argb_visual = true,
+  own_window_argb_value  = 0,
+  own_window_transparent = true,
+  show_graph_range = false,
+  show_graph_scale = false,
+  stippled_borders = 0,
+  update_interval  = 2.0,
+  uppercase        = false,
+  use_spacer       = 'none',
+  use_xft          = true,
+};
+
+conky.text = [[
+${color #5ac8f0}${font Inter:bold:size=10}chanxOS HUD${font}${color}
+${hr 1}
+${color #c0d8f0}CPU     ${color white}${cpu cpu0}%  ${cpubar cpu0 6,120}
+${color #c0d8f0}RAM     ${color white}${mem} / ${memmax}
+${color #c0d8f0}Disk    ${color white}${fs_used /} / ${fs_size /}
+${color #c0d8f0}Net ↓   ${color white}${downspeed wlan0:-}  ${color #c0d8f0}↑ ${color white}${upspeed wlan0:-}
+${hr 1}
+${color #c0d8f0}${time %H:%M:%S}    ${color #8ab8d0}${time %a %d %b %Y}
+]];
+CONKY
+  if command -v conky >/dev/null 2>&1; then
+    echo "on" > "$STATE"
+    conky -c "${HOME}/.config/chanxos/hud.conkyrc" -d 2>/dev/null || \
+      echo "Conky tidak tersedia. Install: sudo apt install conky-all"
+  else
+    echo "Conky tidak terinstall. Jalankan: sudo apt install conky-all"
+  fi
+}
+
+stop_hud() {
+  pkill conky 2>/dev/null || true
+  echo "off" > "$STATE"
+  echo "HUD dimatikan."
+}
+
+current=$(cat "$STATE" 2>/dev/null || echo "off")
+
+# CLI toggle
+case "${1:-}" in
+  on)    start_conky_hud; exit 0 ;;
+  off)   stop_hud;        exit 0 ;;
+  status) echo "HUD: $current"; exit 0 ;;
+esac
+
+# GUI toggle
+if command -v zenity >/dev/null 2>&1 && [[ -n "${DISPLAY:-}" ]]; then
+  if [ "$current" = "on" ]; then
+    zenity --question --title="chanxOS HUD" \
+      --window-icon=chanxos-settings \
+      --text="HUD sedang aktif.\nMatikan HUD overlay?" \
+      --ok-label="Matikan" --cancel-label="Biarkan" \
+      --width=320 2>/dev/null && stop_hud || true
+  else
+    zenity --question --title="chanxOS HUD" \
+      --window-icon=chanxos-settings \
+      --text="Aktifkan HUD overlay di desktop?\n(Butuh: conky-all)" \
+      --ok-label="Aktifkan" --cancel-label="Batal" \
+      --width=380 2>/dev/null && start_conky_hud || true
+  fi
+else
+  echo "chanxOS HUD — Gunakan: chanx-hud [on|off|status]"
+  echo "Status saat ini: $current"
+fi

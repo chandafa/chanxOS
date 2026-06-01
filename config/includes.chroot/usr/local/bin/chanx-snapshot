@@ -1,0 +1,108 @@
+#!/usr/bin/env bash
+# chanxOS Snapshot — System Backup & Restore Tool (FITUR UNIK)
+# =============================================================
+# Simpan snapshot konfigurasi user (.config, dotfiles) ke arsip bertanggal.
+# Berguna untuk backup sebelum eksperimen besar.
+set -euo pipefail
+
+SNAP_DIR="${HOME}/.chanxos/snapshots"
+mkdir -p "$SNAP_DIR"
+
+CYAN='\033[1;36m'; GREEN='\033[1;32m'; YELLOW='\033[1;33m'
+RED='\033[0;31m'; RESET='\033[0m'
+step(){ echo -e "${CYAN}▶  $1${RESET}"; }
+ok()  { echo -e "${GREEN}✓  $1${RESET}"; }
+warn(){ echo -e "${YELLOW}⚠  $1${RESET}"; }
+
+list_snapshots() {
+  ls -1t "$SNAP_DIR"/*.tar.zst 2>/dev/null | while read -r f; do
+    SIZE=$(du -sh "$f" | cut -f1)
+    echo "  $(basename "$f")  ($SIZE)"
+  done
+}
+
+create_snapshot() {
+  local NAME="${1:-$(date +%Y%m%d-%H%M%S)}"
+  local OUT="${SNAP_DIR}/chanxos-snap-${NAME}.tar.zst"
+  step "Membuat snapshot: $NAME"
+  tar \
+    --exclude="${HOME}/.chanxos" \
+    --exclude="${HOME}/.cache" \
+    --exclude="${HOME}/.local/share/Trash" \
+    -C "${HOME}" \
+    -I "zstd -T0 -3" \
+    -cf "$OUT" \
+    .config .bashrc .bash_aliases .profile .local/share/applications 2>/dev/null || \
+  tar \
+    --exclude="${HOME}/.chanxos" \
+    --exclude="${HOME}/.cache" \
+    -C "${HOME}" \
+    -czf "${OUT%.zst}.tar.gz" \
+    .config 2>/dev/null || true
+  ok "Snapshot tersimpan: $OUT"
+}
+
+restore_snapshot() {
+  local SNAPS
+  mapfile -t SNAPS < <(ls -1t "$SNAP_DIR"/*.tar.* 2>/dev/null)
+  if [[ ${#SNAPS[@]} -eq 0 ]]; then
+    warn "Tidak ada snapshot tersedia."; return
+  fi
+
+  if command -v zenity >/dev/null 2>&1 && [[ -n "${DISPLAY:-}" ]]; then
+    local LIST=""
+    for s in "${SNAPS[@]}"; do LIST+="$(basename "$s")\n"; done
+    local SEL
+    SEL=$(printf "%b" "$LIST" | zenity --list \
+      --title="chanxOS Snapshot — Pilih untuk Restore" \
+      --column="Snapshot" --width=520 --height=320 2>/dev/null) || return
+    local FULL="${SNAP_DIR}/${SEL}"
+  else
+    echo "Snapshot tersedia:"
+    for i in "${!SNAPS[@]}"; do printf "  %d. %s\n" "$((i+1))" "$(basename "${SNAPS[$i]}")"; done
+    read -rp "Pilih nomor: " N
+    local FULL="${SNAPS[$((N-1))]}"
+  fi
+
+  step "Merestore: $(basename "$FULL")"
+  tar -xf "$FULL" -C "${HOME}" 2>/dev/null || warn "Restore mungkin sebagian"
+  ok "Restore selesai. Restart sesi untuk melihat perubahan."
+}
+
+# GUI
+if command -v zenity >/dev/null 2>&1 && [[ -n "${DISPLAY:-}" ]] && [[ "${1:-}" == "" ]]; then
+  CHOICE=$(zenity --list \
+    --title="chanxOS Snapshot Manager" \
+    --window-icon=chanxos-settings \
+    --width=460 --height=300 \
+    --text="<b>chanxOS Snapshot Manager</b>
+Backup &amp; restore konfigurasi user:" \
+    --column="ID" --column="Aksi" --column="Keterangan" \
+    --hide-column=1 --print-column=1 \
+    "create"  "  Buat Snapshot"     "Simpan konfigurasi user saat ini" \
+    "list"    "  Lihat Snapshot"    "Daftar snapshot yang tersedia" \
+    "restore" "  Restore Snapshot"  "Kembalikan konfigurasi dari snapshot" \
+    2>/dev/null) || exit 0
+
+  case "$CHOICE" in
+    create)  create_snapshot ;;
+    list)
+      ITEMS=$(list_snapshots)
+      [[ -z "$ITEMS" ]] && ITEMS="  (belum ada snapshot)"
+      zenity --info --title="Daftar Snapshot" \
+        --width=480 \
+        --text="<span font_family='monospace'>${ITEMS}</span>" 2>/dev/null || true ;;
+    restore) restore_snapshot ;;
+  esac
+  exit 0
+fi
+
+case "${1:-create}" in
+  create)  create_snapshot "${2:-}" ;;
+  list)    list_snapshots ;;
+  restore) restore_snapshot ;;
+  *)
+    echo "Usage: chanx-snapshot [create|list|restore] [name]"
+    echo "Snapshots tersimpan di: $SNAP_DIR"
+    ;;
+esac

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=chanxOS Focus Mode
+Comment=Sembunyikan gangguan, fokus bekerja
+Exec=chanx-focus toggle
+Icon=chanxos-settings
+Terminal=false
+Categories=System;Utility;
+Keywords=focus;pomodoro;distraction;

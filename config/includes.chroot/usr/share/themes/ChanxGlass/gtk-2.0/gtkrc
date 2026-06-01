@@ -1,41 +1,54 @@
-# chanxOS ChanxGlass GTK2 Theme
-gtk-theme-name      = "ChanxGlass"
-gtk-icon-theme-name = "Papirus"
-gtk-font-name       = "Inter 10"
+# chanxOS ChanxGlass GTK2 — matches GTK3 palette
+gtk-theme-name        = "ChanxGlass"
+gtk-icon-theme-name   = "Papirus"
+gtk-font-name         = "Inter 10"
 gtk-cursor-theme-name = "Adwaita"
 gtk-cursor-theme-size = 24
-gtk-toolbar-style   = GTK_TOOLBAR_ICONS
-gtk-button-images   = 1
-gtk-menu-images     = 1
-gtk-xft-antialias   = 1
-gtk-xft-hinting     = 1
-gtk-xft-hintstyle   = "hintslight"
-gtk-xft-rgba        = "rgb"
+gtk-toolbar-style     = GTK_TOOLBAR_ICONS
+gtk-button-images     = 1
+gtk-menu-images       = 1
+gtk-xft-antialias     = 1
+gtk-xft-hinting       = 1
+gtk-xft-hintstyle     = "hintslight"
+gtk-xft-rgba          = "rgb"
+gtk-xft-dpi           = 96
 
-style "chanxglass-default" {
-  bg[NORMAL]      = "#F0F8FF"
-  bg[PRELIGHT]    = "#E8F4FF"
-  bg[SELECTED]    = "#2aa8e0"
-  bg[INSENSITIVE] = "#E0ECF5"
-  bg[ACTIVE]      = "#D8EDFF"
+style "chanxglass" {
+  # cx_glass_win  ≈ #F6FAFE  (246,250,254)
+  bg[NORMAL]      = "#F6FAFE"
+  bg[PRELIGHT]    = "#EEF6FF"
+  bg[SELECTED]    = "#2196C4"
+  bg[INSENSITIVE] = "#EDF5FC"
+  bg[ACTIVE]      = "#DCF0FF"
 
-  fg[NORMAL]      = "#12293f"
-  fg[PRELIGHT]    = "#12293f"
-  fg[SELECTED]    = "#ffffff"
-  fg[INSENSITIVE] = "#8aabbf"
-  fg[ACTIVE]      = "#12293f"
+  fg[NORMAL]      = "#0F2538"
+  fg[PRELIGHT]    = "#0F2538"
+  fg[SELECTED]    = "#FFFFFF"
+  fg[INSENSITIVE] = "#9AB5C8"
+  fg[ACTIVE]      = "#0F2538"
 
-  text[NORMAL]    = "#12293f"
-  text[SELECTED]  = "#ffffff"
-  text[ACTIVE]    = "#12293f"
+  text[NORMAL]    = "#0F2538"
+  text[SELECTED]  = "#FFFFFF"
+  text[ACTIVE]    = "#0F2538"
+  text[INSENSITIVE] = "#9AB5C8"
 
   base[NORMAL]    = "#FAFCFF"
-  base[SELECTED]  = "#2aa8e0"
-  base[ACTIVE]    = "#D8EDFF"
+  base[SELECTED]  = "#2196C4"
+  base[ACTIVE]    = "#DCF0FF"
+  base[INSENSITIVE] = "#EDF5FC"
 
-  GtkWidget::focus-padding      = 0
-  GtkWidget::focus-line-width   = 0
+  GtkWidget::focus-padding    = 0
+  GtkWidget::focus-line-width = 0
   GtkScrolledWindow::scrollbar-spacing = 0
+  GtkMenu::horizontal-padding = 4
+  GtkMenu::vertical-padding   = 4
 }
 
-class "*" style "chanxglass-default"
+class "*" style "chanxglass"
+
+# Tooltips — dark background like GTK3
+style "chanxglass-tooltip" {
+  bg[NORMAL] = "#10243A"
+  fg[NORMAL] = "#DCF0FF"
+}
+widget "gtk-tooltip*" style "chanxglass-tooltip"

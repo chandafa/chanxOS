@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# chanxOS Focus Mode — Sembunyikan semua gangguan
+# Unik: toggle mute notif + hide panel + blackout wallpaper
+set -euo pipefail
+
+STATE="${HOME}/.config/chanxos/focus-active"
+mkdir -p "${HOME}/.config/chanxos"
+
+enter_focus() {
+  echo "on" > "$STATE"
+  # Sembunyikan panel XFCE
+  xfce4-panel --hide 2>/dev/null || true
+  # Pause notifyd
+  pkill -STOP xfce4-notifyd 2>/dev/null || \
+    killall -STOP xfce4-notifyd 2>/dev/null || true
+  # Set wallpaper ke warna solid gelap (minimalism)
+  xfconf-query -c xfce4-desktop \
+    -p /backdrop/screen0/monitor0/workspace0/color1 \
+    -t int -s 10 -t int -s 20 -t int -s 34 -t int -s 65535 \
+    2>/dev/null || true
+  xfconf-query -c xfce4-desktop \
+    -p /backdrop/screen0/monitor0/workspace0/image-style \
+    -t int -s 0 2>/dev/null || true
+  notify-send "Focus Mode ON" "Panel disembunyikan. Notifikasi dijeda." \
+    --urgency=low --icon=chanxos-logo 2>/dev/null || true
+  echo "  Focus Mode: ON"
+  echo "  Panel disembunyikan, notifikasi dijeda."
+  echo "  Jalankan 'chanx-focus off' untuk keluar."
+}
+
+leave_focus() {
+  echo "off" > "$STATE"
+  # Tampilkan panel kembali
+  xfce4-panel --show 2>/dev/null || \
+    xfce4-panel -r 2>/dev/null || true
+  # Resume notifyd
+  pkill -CONT xfce4-notifyd 2>/dev/null || \
+    killall -CONT xfce4-notifyd 2>/dev/null || true
+  # Restore image-style ke stretch
+  xfconf-query -c xfce4-desktop \
+    -p /backdrop/screen0/monitor0/workspace0/image-style \
+    -t int -s 5 2>/dev/null || true
+  echo "  Focus Mode: OFF — semua dikembalikan."
+}
+
+current=$(cat "$STATE" 2>/dev/null || echo "off")
+
+case "${1:-toggle}" in
+  on)     enter_focus; exit 0 ;;
+  off)    leave_focus; exit 0 ;;
+  toggle)
+    if [ "$current" = "on" ]; then leave_focus
+    else enter_focus; fi ;;
+  status) echo "Focus Mode: $current" ;;
+esac

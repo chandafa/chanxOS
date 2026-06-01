@@ -1,12 +1,41 @@
+# chanxOS ChanxGlass XFWM4 Theme
+# Window manager decorations to match GTK3 liquid glass
+
+# Title bar
 title_full_width=true
-button_spacing=6
 full_width_title=true
-title_vertical_offset_active=0
+title_alignment=center
+title_font=Inter Semi-Bold 10
+title_vertical_offset_active=2
+title_vertical_offset_inactive=2
 title_horizontal_offset=0
-button_offset=0
+
+# Buttons
+button_offset=5
+button_spacing=4
+
+# Border
+borderless_maximize=true
+snap_distance=10
+
+# Colors — matching cx palette
+active_text_color=#0F2538
+inactive_text_color=#9AB5C8
+active_border_color=#B4D2E8
+inactive_border_color=#D8ECF8
+active_color_1=#FCFEFF
+active_color_2=#EAF4FE
+inactive_color_1=#F2F8FD
+inactive_color_2=#E8F2FA
+active_hilight_1=#FFFFFF
+active_hilight_2=#D8EFFF
+inactive_hilight_1=#F8FBFE
+inactive_hilight_2=#EAF3FB
+
+# Shadows
 shadow_delta_height=1
-shadow_delta_width=1
+shadow_delta_width=0
 shadow_delta_x=0
-shadow_delta_y=2
-shadow_opacity=0.18
-shadow_radius=10
+shadow_delta_y=3
+shadow_opacity=0.20
+shadow_radius=14

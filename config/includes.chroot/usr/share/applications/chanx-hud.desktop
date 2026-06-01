@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=chanxOS HUD
+Comment=Overlay info real-time di desktop
+Exec=chanx-hud
+Icon=chanxos-settings
+Terminal=false
+Categories=System;Utility;

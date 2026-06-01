@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<channel name="xfce4-keyboard-shortcuts" version="1.0">
+  <property name="commands" type="empty">
+    <property name="custom" type="empty">
+      <!-- Standard shortcuts -->
+      <property name="&lt;Super&gt;e"          type="string" value="thunar"/>
+      <property name="&lt;Super&gt;t"          type="string" value="xfce4-terminal"/>
+      <property name="&lt;Alt&gt;F2"           type="string" value="xfce4-appfinder --collapsed"/>
+      <!-- chanxOS unique shortcuts -->
+      <property name="Print"                    type="string" value="chanx-snap area"/>
+      <property name="&lt;Alt&gt;Print"         type="string" value="chanx-snap window"/>
+      <property name="&lt;Shift&gt;Print"       type="string" value="chanx-snap full"/>
+      <property name="&lt;Super&gt;F"           type="string" value="chanx-focus toggle"/>
+      <property name="&lt;Super&gt;G"           type="string" value="chanx-glass"/>
+      <property name="&lt;Super&gt;N"           type="string" value="chanx-quicknote"/>
+      <property name="&lt;Super&gt;H"           type="string" value="chanx-hud"/>
+      <property name="&lt;Super&gt;w"           type="string" value="chanx-welcome"/>
+    </property>
+  </property>
+  <property name="xfwm4" type="empty">
+    <property name="custom" type="empty">
+      <property name="&lt;Alt&gt;F4"     type="string" value="close_window_key"/>
+      <property name="&lt;Alt&gt;F10"    type="string" value="maximize_window_key"/>
+      <property name="&lt;Alt&gt;F9"     type="string" value="hide_window_key"/>
+      <property name="&lt;Super&gt;Left" type="string" value="tile_left_key"/>
+      <property name="&lt;Super&gt;Right" type="string" value="tile_right_key"/>
+      <property name="&lt;Super&gt;Up"   type="string" value="maximize_window_key"/>
+      <property name="&lt;Super&gt;D"    type="string" value="show_desktop_key"/>
+    </property>
+  </property>
+</channel>

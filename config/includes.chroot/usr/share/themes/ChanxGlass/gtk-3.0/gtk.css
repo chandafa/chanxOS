@@ -1,71 +1,88 @@
 /* ═══════════════════════════════════════════════════════════════
-   chanxOS — ChanxGlass GTK3 Theme
-   Liquid Glass aesthetic: translucency, blur-ready, soft borders
+   chanxOS — ChanxGlass GTK3  |  Liquid Glass Theme
+   Consistent palette, no color clashes
    ═══════════════════════════════════════════════════════════════ */
 
-/* ── Color Variables ──────────────────────────────────────────── */
-@define-color chanx_accent       #2aa8e0;
-@define-color chanx_accent_hover #1a9ed6;
-@define-color chanx_accent_alpha  rgba(42, 168, 224, 0.20);
+/* ── Palette ─────────────────────────────────────────────────── */
+@define-color c_accent         #2BB8F0;
+@define-color c_accent_dark    #1898D0;
+@define-color c_accent_alpha   rgba(43, 184, 240, 0.18);
+@define-color c_accent_glow    rgba(43, 184, 240, 0.30);
 
-@define-color chanx_glass_bg      rgba(248, 252, 255, 0.88);
-@define-color chanx_glass_surface rgba(255, 255, 255, 0.72);
-@define-color chanx_glass_panel   rgba(255, 255, 255, 0.55);
-@define-color chanx_glass_border  rgba(180, 210, 235, 0.70);
-@define-color chanx_glass_shadow  rgba(30, 80, 130, 0.10);
+@define-color c_bg             rgba(244, 250, 255, 0.92);
+@define-color c_surface        rgba(255, 255, 255, 0.78);
+@define-color c_surface_hover  rgba(255, 255, 255, 0.94);
+@define-color c_panel          rgba(255, 255, 255, 0.52);
+@define-color c_border         rgba(170, 205, 230, 0.65);
+@define-color c_border_focus   rgba(43, 184, 240, 0.70);
+@define-color c_shadow_soft    rgba(20, 55, 90, 0.09);
+@define-color c_shadow_mid     rgba(20, 55, 90, 0.16);
 
-@define-color chanx_text          #12293f;
-@define-color chanx_text_muted    #6a8aa8;
-@define-color chanx_text_white    #ffffff;
+/* Text — always on light bg */
+@define-color c_text           #0d2236;
+@define-color c_text_sec       #4a6880;
+@define-color c_text_muted     #8aabbf;
+@define-color c_text_inv       #ffffff;
+@define-color c_text_inv_sec   rgba(255,255,255,0.80);
 
-/* ── Reset ────────────────────────────────────────────────────── */
+/* States */
+@define-color c_danger         #e85050;
+@define-color c_danger_dark    #c43030;
+@define-color c_success        #30b870;
+@define-color c_warn           #f0a030;
+
+/* ── Reset ───────────────────────────────────────────────────── */
 * {
   outline-width: 0;
   -gtk-outline-radius: 0;
+  box-sizing: border-box;
 }
 
-/* ── Window & Background ─────────────────────────────────────── */
-window, .background, dialog {
-  background-color: @chanx_glass_bg;
-  color: @chanx_text;
+/* ── Root window ─────────────────────────────────────────────── */
+window,
+.background,
+dialog {
+  background-color: @c_bg;
+  color: @c_text;
 }
 
 .window-frame {
-  box-shadow: 0 12px 40px rgba(20, 60, 100, 0.18),
-              0 2px 8px rgba(20, 60, 100, 0.10);
+  box-shadow:
+    0 14px 45px @c_shadow_mid,
+    0 2px 8px  @c_shadow_soft;
   margin: 10px;
 }
 
-/* ── Titlebar / Headerbar — frosted glass panel ────────────────────────────────────── */
+/* ── Titlebar / Headerbar ────────────────────────────────────── */
 headerbar,
 .titlebar {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.90) 0%,
-    rgba(235, 246, 255, 0.80) 100%
-  );
-  border-bottom: 1px solid @chanx_glass_border;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.80) inset,
-              0 4px 16px @chanx_glass_shadow;
-  padding: 6px 12px;
-  color: @chanx_text;
-  min-height: 42px;
+  background:
+    linear-gradient(180deg,
+      rgba(255,255,255,0.92) 0%,
+      rgba(232,246,255,0.84) 100%);
+  border-bottom: 1px solid @c_border;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.85),
+    0 3px 12px @c_shadow_soft;
+  padding: 5px 10px;
+  color: @c_text;
+  min-height: 40px;
   border-radius: 12px 12px 0 0;
 }
 
-headerbar .title {
+.titlebar .title {
   font-weight: 600;
   font-size: 10pt;
-  color: @chanx_text;
+  color: @c_text;
 }
-
-headerbar .subtitle {
+.titlebar .subtitle {
   font-size: 8pt;
-  color: @chanx_text_muted;
+  color: @c_text_sec;
 }
 
-/* ── Window Control Buttons (macOS style) ────────────────────── */
-headerbar button.titlebutton {
+/* Window buttons */
+headerbar button.titlebutton,
+.titlebar button.titlebutton {
   background: transparent;
   border: none;
   padding: 4px;
@@ -73,323 +90,368 @@ headerbar button.titlebutton {
   min-width: 14px;
   min-height: 14px;
   box-shadow: none;
+  color: @c_text;
 }
-
 headerbar button.titlebutton:hover {
-  background: rgba(0, 0, 0, 0.08);
+  background: rgba(0,0,0,0.07);
 }
 
 /* ── Buttons ─────────────────────────────────────────────────── */
 button {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.92) 0%,
-    rgba(228, 242, 255, 0.88) 100%
-  );
-  border: 1px solid @chanx_glass_border;
+  background: linear-gradient(180deg,
+    rgba(255,255,255,0.94) 0%,
+    rgba(225,242,255,0.90) 100%);
+  border: 1px solid @c_border;
   border-radius: 8px;
-  color: @chanx_text;
+  color: @c_text;
   padding: 6px 14px;
-  box-shadow: 0 1px 2px @chanx_glass_shadow,
-              inset 0 1px 0 rgba(255, 255, 255, 0.70);
-  transition: all 120ms ease;
+  box-shadow:
+    0 1px 2px @c_shadow_soft,
+    inset 0 1px 0 rgba(255,255,255,0.75);
+  transition: all 110ms ease;
 }
-
 button:hover {
-  background: rgba(255, 255, 255, 0.98);
-  border-color: rgba(42, 168, 224, 0.50);
-  box-shadow: 0 2px 8px rgba(42, 168, 224, 0.15);
+  background: @c_surface_hover;
+  border-color: @c_border_focus;
+  box-shadow: 0 2px 8px @c_accent_glow;
+  color: @c_text;
 }
-
 button:active {
-  background: rgba(220, 238, 255, 0.95);
-  box-shadow: inset 0 2px 4px rgba(20, 60, 100, 0.10);
+  background: rgba(215,238,255,0.96);
+  box-shadow: inset 0 2px 4px rgba(20,55,90,0.08);
+  color: @c_text;
+}
+button:disabled {
+  background: rgba(245,248,252,0.70);
+  border-color: rgba(170,205,230,0.35);
+  color: @c_text_muted;
+  box-shadow: none;
 }
 
 button.suggested-action {
-  background: linear-gradient(180deg, #3ab8f0, #2098d0);
-  border-color: #1888c0;
-  color: @chanx_text_white;
-  box-shadow: 0 2px 8px rgba(42, 168, 224, 0.35);
+  background: linear-gradient(180deg, #3ec4f8, #1ea8e0);
+  border-color: #1898d0;
+  color: @c_text_inv;
+  box-shadow: 0 2px 10px @c_accent_glow;
 }
-
 button.suggested-action:hover {
-  background: linear-gradient(180deg, #48c4f8, #26a4dc);
+  background: linear-gradient(180deg, #56d0ff, #28b4ec);
+  color: @c_text_inv;
+}
+button.suggested-action:disabled {
+  background: rgba(43,184,240,0.35);
+  color: rgba(255,255,255,0.55);
 }
 
 button.destructive-action {
-  background: linear-gradient(180deg, #ff7b7b, #e05050);
-  border-color: #cc4040;
-  color: @chanx_text_white;
+  background: linear-gradient(180deg, #f47070, #d04040);
+  border-color: @c_danger_dark;
+  color: @c_text_inv;
+  box-shadow: 0 2px 8px rgba(220,60,60,0.30);
+}
+button.destructive-action:hover {
+  background: linear-gradient(180deg, #f88888, #e05050);
+  color: @c_text_inv;
 }
 
-/* ── Entry / Text Input ──────────────────────────────────────── */
-entry, spinbutton text, textview text {
-  background-color: rgba(255, 255, 255, 0.85);
-  border: 1px solid @chanx_glass_border;
+/* ── Entry / text input ──────────────────────────────────────── */
+entry,
+spinbutton text,
+textview text {
+  background: rgba(255,255,255,0.88);
+  border: 1.5px solid @c_border;
   border-radius: 8px;
-  color: @chanx_text;
+  color: @c_text;
+  caret-color: @c_accent;
   padding: 6px 10px;
-  box-shadow: inset 0 1px 3px rgba(20, 60, 100, 0.06);
+  box-shadow: inset 0 1px 3px rgba(20,55,90,0.05);
+  selection-color: @c_text_inv;
+  selection-background-color: @c_accent;
 }
-
-entry:focus, spinbutton text:focus, textview text:focus {
-  border-color: @chanx_accent;
-  box-shadow: 0 0 0 3px @chanx_accent_alpha,
-              inset 0 1px 3px rgba(20, 60, 100, 0.06);
+entry:focus,
+spinbutton text:focus,
+textview text:focus {
+  border-color: @c_border_focus;
+  box-shadow:
+    0 0 0 3px @c_accent_alpha,
+    inset 0 1px 3px rgba(20,55,90,0.05);
+  background: rgba(255,255,255,0.96);
+}
+entry:disabled {
+  background: rgba(240,246,252,0.65);
+  color: @c_text_muted;
+  border-color: rgba(170,205,230,0.35);
 }
 
 /* ── Selection ───────────────────────────────────────────────── */
-selection, *:selected {
-  background-color: @chanx_accent;
-  color: @chanx_text_white;
+selection,
+*:selected {
+  background-color: @c_accent;
+  color: @c_text_inv;
 }
 
 /* ── Menus ───────────────────────────────────────────────────── */
-menu, .menu, .context-menu {
-  background-color: rgba(248, 252, 255, 0.95);
-  border: 1px solid @chanx_glass_border;
+menu,
+.menu,
+.context-menu,
+.popup {
+  background: rgba(248,253,255,0.97);
+  border: 1px solid @c_border;
   border-radius: 10px;
   padding: 4px 0;
-  box-shadow: 0 8px 32px rgba(20, 60, 100, 0.18),
-              0 1px 4px rgba(20, 60, 100, 0.10);
-  color: @chanx_text;
+  box-shadow:
+    0 8px 30px @c_shadow_mid,
+    0 1px 4px @c_shadow_soft;
+  color: @c_text;
 }
-
 menuitem {
   border-radius: 6px;
-  margin: 2px 4px;
+  margin: 1px 4px;
   padding: 6px 12px;
-  color: @chanx_text;
+  color: @c_text;
 }
-
-menuitem:hover, menuitem:selected {
-  background-color: @chanx_accent_alpha;
-  color: @chanx_text;
+menuitem:hover,
+menuitem:selected {
+  background: @c_accent_alpha;
+  color: @c_text;
 }
+menuitem:disabled { color: @c_text_muted; }
 
+separator.menuitem,
 menuitem separator {
-  background-color: @chanx_glass_border;
-  margin: 4px 8px;
+  background: @c_border;
+  min-height: 1px;
+  margin: 3px 8px;
 }
 
-/* ── Menubar ─────────────────────────────────────────────────── */
+/* Menubar */
 menubar {
-  background-color: rgba(248, 252, 255, 0.90);
-  border-bottom: 1px solid @chanx_glass_border;
-  padding: 2px 4px;
-  color: @chanx_text;
+  background: rgba(248,253,255,0.92);
+  border-bottom: 1px solid @c_border;
+  padding: 1px 4px;
+  color: @c_text;
 }
-
 menubar > menuitem {
   border-radius: 6px;
   padding: 4px 10px;
+  color: @c_text;
+}
+menubar > menuitem:hover,
+menubar > menuitem:selected {
+  background: @c_accent_alpha;
+  color: @c_text;
 }
 
-menubar > menuitem:hover {
-  background-color: @chanx_accent_alpha;
-}
-
-/* ── Scrollbar ───────────────────────────────────────────────── */
-scrollbar {
-  background: transparent;
-  border: none;
-}
-
+/* ── Scrollbars ──────────────────────────────────────────────── */
+scrollbar { background: transparent; border: none; }
 scrollbar trough {
-  background: rgba(180, 210, 235, 0.25);
+  background: rgba(170,205,230,0.20);
   border-radius: 4px;
   min-width: 6px;
   min-height: 6px;
 }
-
 scrollbar slider {
-  background: rgba(100, 160, 200, 0.45);
+  background: rgba(90,155,195,0.40);
   border-radius: 4px;
   min-width: 6px;
-  min-height: 6px;
+  min-height: 24px;
   border: none;
 }
+scrollbar slider:hover  { background: rgba(43,184,240,0.60); }
+scrollbar slider:active { background: @c_accent; }
 
-scrollbar slider:hover {
-  background: rgba(42, 168, 224, 0.65);
-}
-
-/* ── Scrolled Window / Views ────────────────────────────────── */
-scrolledwindow,
+/* ── Views / Trees / Icons ───────────────────────────────────── */
 .view,
 treeview,
-iconview {
-  background-color: rgba(248, 252, 255, 0.85);
-  border: 1px solid @chanx_glass_border;
+iconview,
+scrolledwindow {
+  background: rgba(248,253,255,0.88);
+  border: 1px solid @c_border;
   border-radius: 8px;
-  color: @chanx_text;
+  color: @c_text;
 }
-
+treeview.view:nth-child(even) {
+  background: rgba(240,249,255,0.50);
+}
 treeview row:selected,
 iconview item:selected {
-  background-color: @chanx_accent_alpha;
-  color: @chanx_text;
+  background: @c_accent_alpha;
+  color: @c_text;
   border-radius: 4px;
+}
+treeview row:selected:focus,
+iconview item:selected:focus {
+  background: @c_accent;
+  color: @c_text_inv;
 }
 
 /* ── Sidebar ─────────────────────────────────────────────────── */
-.sidebar,
-.navigation-sidebar {
-  background-color: rgba(240, 248, 255, 0.60);
-  border-right: 1px solid @chanx_glass_border;
-  color: @chanx_text;
+.sidebar, .navigation-sidebar {
+  background: rgba(236,248,255,0.62);
+  border-right: 1px solid @c_border;
+  color: @c_text;
 }
-
-.sidebar row:selected,
-.navigation-sidebar row:selected {
-  background-color: @chanx_accent_alpha;
-  color: @chanx_text;
-  border-radius: 6px;
+.sidebar row { border-radius: 6px; margin: 2px 6px; color: @c_text; }
+.sidebar row:hover { background: rgba(43,184,240,0.10); }
+.sidebar row:selected {
+  background: @c_accent_alpha;
+  color: @c_text;
+}
+.sidebar row:selected:focus {
+  background: @c_accent;
+  color: @c_text_inv;
 }
 
 /* ── Notebook / Tabs ─────────────────────────────────────────── */
 notebook > header {
-  background-color: @chanx_glass_panel;
-  border-bottom: 1px solid @chanx_glass_border;
+  background: rgba(244,250,255,0.90);
+  border-bottom: 1px solid @c_border;
+  padding: 2px;
 }
-
 notebook > header > tabs > tab {
-  padding: 6px 14px;
+  padding: 6px 16px;
   border-radius: 8px 8px 0 0;
-  color: @chanx_text_muted;
+  color: @c_text_sec;
   background: transparent;
-}
-
-notebook > header > tabs > tab:checked {
-  background: rgba(255, 255, 255, 0.85);
-  color: @chanx_text;
-  border: 1px solid @chanx_glass_border;
+  border: 1px solid transparent;
   border-bottom: none;
+}
+notebook > header > tabs > tab:checked {
+  background: rgba(255,255,255,0.88);
+  color: @c_text;
+  border-color: @c_border;
+  border-bottom-color: transparent;
+  box-shadow: 0 -2px 6px @c_shadow_soft;
+}
+notebook > header > tabs > tab:hover:not(:checked) {
+  background: rgba(255,255,255,0.50);
+  color: @c_text;
 }
 
 /* ── Tooltip ─────────────────────────────────────────────────── */
-tooltip,
-.tooltip {
-  background-color: rgba(20, 45, 70, 0.90);
-  border: 1px solid rgba(60, 110, 150, 0.60);
+tooltip, .tooltip {
+  background: rgba(16,38,58,0.92);
+  border: 1px solid rgba(50,100,140,0.55);
   border-radius: 8px;
-  color: rgba(220, 240, 255, 0.95);
+  color: rgba(215,240,255,0.96);
   padding: 4px 10px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.28);
 }
+tooltip label { color: rgba(215,240,255,0.96); }
 
 /* ── Popover ─────────────────────────────────────────────────── */
-popover,
-.popover {
-  background-color: rgba(248, 252, 255, 0.96);
-  border: 1px solid @chanx_glass_border;
+popover, .popover {
+  background: rgba(248,253,255,0.97);
+  border: 1px solid @c_border;
   border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(20, 60, 100, 0.20);
+  box-shadow: 0 8px 32px @c_shadow_mid;
   padding: 8px;
+  color: @c_text;
 }
 
-/* ── Progress Bar ────────────────────────────────────────────── */
+/* ── Progress bar ────────────────────────────────────────────── */
 progressbar trough {
-  background: rgba(180, 210, 235, 0.35);
-  border-radius: 4px;
-  min-height: 6px;
+  background: rgba(170,205,230,0.30);
+  border-radius: 5px;
+  min-height: 7px;
+  border: none;
 }
-
 progressbar progress {
-  background: linear-gradient(90deg, @chanx_accent, #60d0ff);
-  border-radius: 4px;
-  min-height: 6px;
+  background: linear-gradient(90deg, @c_accent, #80dcff);
+  border-radius: 5px;
+  min-height: 7px;
 }
 
-/* ── Scale / Slider ──────────────────────────────────────────── */
+/* ── Scale ───────────────────────────────────────────────────── */
 scale trough {
-  background: rgba(180, 210, 235, 0.40);
+  background: rgba(170,205,230,0.35);
   border-radius: 4px;
 }
-
-scale highlight {
-  background: @chanx_accent;
-  border-radius: 4px;
-}
-
+scale highlight { background: @c_accent; border-radius: 4px; }
 scale slider {
-  background: @chanx_text_white;
-  border: 1px solid @chanx_glass_border;
+  background: @c_text_inv;
+  border: 1.5px solid @c_border;
   border-radius: 50%;
   min-width: 16px;
   min-height: 16px;
-  box-shadow: 0 2px 6px rgba(20, 60, 100, 0.20);
+  box-shadow: 0 2px 6px @c_shadow_mid;
 }
+scale slider:hover { border-color: @c_accent; }
 
 /* ── Check & Radio ───────────────────────────────────────────── */
 checkbutton check,
 radiobutton radio {
-  background: rgba(255, 255, 255, 0.85);
-  border: 1.5px solid @chanx_glass_border;
+  background: rgba(255,255,255,0.88);
+  border: 1.5px solid @c_border;
   border-radius: 4px;
+  min-width: 16px;
+  min-height: 16px;
 }
-
 checkbutton check:checked,
 radiobutton radio:checked {
-  background: @chanx_accent;
-  border-color: @chanx_accent;
-  color: @chanx_text_white;
+  background: @c_accent;
+  border-color: @c_accent_dark;
+  color: @c_text_inv;
 }
+checkbutton check:indeterminate {
+  background: rgba(43,184,240,0.45);
+  border-color: @c_accent;
+}
+checkbutton label,
+radiobutton label { color: @c_text; }
 
 /* ── Switch ──────────────────────────────────────────────────── */
 switch {
-  background: rgba(180, 210, 235, 0.50);
+  background: rgba(170,205,230,0.45);
   border-radius: 14px;
-  border: 1px solid @chanx_glass_border;
+  border: 1.5px solid @c_border;
   min-width: 46px;
   min-height: 26px;
 }
-
-switch:checked {
-  background: @chanx_accent;
-  border-color: @chanx_accent_hover;
-}
-
+switch:checked { background: @c_accent; border-color: @c_accent_dark; }
 switch slider {
-  background: @chanx_text_white;
+  background: @c_text_inv;
   border-radius: 50%;
   min-width: 20px;
   min-height: 20px;
-  box-shadow: 0 2px 4px rgba(20, 60, 100, 0.20);
+  box-shadow: 0 1px 4px @c_shadow_mid;
 }
 
 /* ── Separator ───────────────────────────────────────────────── */
-separator {
-  background-color: @chanx_glass_border;
-  min-height: 1px;
-  min-width: 1px;
-}
+separator { background: @c_border; min-height: 1px; min-width: 1px; }
 
 /* ── Spinner ─────────────────────────────────────────────────── */
-spinner {
-  color: @chanx_accent;
-}
+spinner { color: @c_accent; }
 
-/* ── Status Bar ──────────────────────────────────────────────── */
+/* ── Statusbar ───────────────────────────────────────────────── */
 statusbar {
-  background: @chanx_glass_panel;
-  border-top: 1px solid @chanx_glass_border;
-  font-size: 9pt;
-  color: @chanx_text_muted;
+  background: rgba(244,250,255,0.80);
+  border-top: 1px solid @c_border;
+  font-size: 8pt;
+  color: @c_text_sec;
   padding: 2px 8px;
 }
 
-/* ── File Chooser ────────────────────────────────────────────── */
-.path-bar button {
-  border-radius: 6px;
-  padding: 4px 8px;
-}
+/* ── Info bar ────────────────────────────────────────────────── */
+infobar { border-radius: 0; }
+infobar.info    { background: rgba(43,184,240,0.12); color: @c_text; }
+infobar.warning { background: rgba(240,160,48,0.12); color: @c_text; }
+infobar.error   { background: rgba(232,80,80,0.12);  color: @c_text; }
 
-/* ── Terminal-specific (xfce4-terminal) ──────────────────────── */
-VteTerminal,
-vte-terminal {
-  background-color: rgba(8, 18, 30, 0.94);
-  color: #d4eeff;
+/* ── Frame ───────────────────────────────────────────────────── */
+frame > border { border: 1px solid @c_border; border-radius: 6px; }
+
+/* ── Terminal (xfce4-terminal / VTE) ─────────────────────────── */
+VteTerminal, vte-terminal {
+  background-color: rgba(7,16,28,0.94);
+  color: #d0e8ff;
   border-radius: 0;
 }
+
+/* ── Thunar sidebar fix (prevent invisible text) ─────────────── */
+.places-sidebar row label  { color: @c_text; }
+.places-sidebar row:selected label { color: @c_text; }
+.places-sidebar row:selected:focus label { color: @c_text_inv; }
+
+/* ── Fix for dark panels injected by XFCE ───────────────────── */
+.xfce4-panel * { color: inherit; }

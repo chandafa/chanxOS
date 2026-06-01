@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=chanxOS QuickNote
+Comment=Catatan cepat tersimpan permanen
+Exec=chanx-quicknote
+Icon=mousepad
+Terminal=false
+Categories=Office;Utility;
+Keywords=note;catatan;memo;

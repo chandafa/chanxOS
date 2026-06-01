@@ -1,2 +1,4 @@
 [PlankDockItemPreferences]
-Launcher=file:///usr/share/applications/chanx-devpack.desktop
+Launcher=chanx-devpack.desktop
+Icon=applications-development
+Text=DevPack

@@ -1,89 +1,54 @@
 #!/bin/sh
-# chanxOS Binary Hook — Boot Branding Cleanup
-# =============================================
-# Menyalin splash, menimpa teks upstream, dan memastikan
-# layout boot menu GRUB + ISOLINUX rapi dan konsisten.
+# chanxOS Binary Hook — Boot Branding
+# Patch semua teks Debian → chanxOS di binary
 set -e
 
 BRAND="chanxOS 0.1 Alpha"
-LIVE_PARAMS="boot=live components username=chanx hostname=chanxos quiet splash plymouth.ignore-serial-consoles"
+LIVE_PARAMS="boot=live components username=chanx hostname=chanxos user-fullname=chanxOS quiet splash plymouth.ignore-serial-consoles loglevel=3"
 
-# ── Salin splash image ────────────────────────────────────────────────────────
+# ── Splash images ─────────────────────────────────────────────────────────
 if [ -d binary/isolinux ] && [ -f config/bootloaders/isolinux/splash.png ]; then
   cp -f config/bootloaders/isolinux/splash.png binary/isolinux/splash.png
-  echo "  [boot-branding] ISOLINUX splash: OK"
 fi
-
 if [ -d binary/boot/grub ] && [ -f config/bootloaders/grub-efi/splash.png ]; then
   cp -f config/bootloaders/grub-efi/splash.png binary/boot/grub/splash.png
-  echo "  [boot-branding] GRUB splash: OK"
 fi
 
-# ── Salin konfigurasi GRUB kita (override upstream) ──────────────────────────
-if [ -d binary/boot/grub ] && [ -f config/bootloaders/grub-efi/config.cfg ]; then
-  # Jangan timpa grub.cfg yang dibuat lb — tambahkan source saja
-  GRUB_CFG="binary/boot/grub/grub.cfg"
-  if [ -f "$GRUB_CFG" ]; then
-    # Hapus entri default Debian, ganti dengan entri chanxOS
-    sed -i \
-      -e 's|menuentry "Live system"|menuentry " ▶  Live chanxOS"|g' \
-      -e 's|menuentry "Live system (fail-safe mode)"|menuentry " ▶  Live chanxOS  [Safe Graphics]"|g' \
-      -e 's|menuentry "Start installer"|menuentry " ⚙  Install chanxOS"|g' \
-      -e 's|boot=live components quiet splash|'"$LIVE_PARAMS"'|g' \
-      -e 's|Debian GNU/Linux|chanxOS|g' \
-      -e 's|Debian Live|chanxOS Live|g' \
-      "$GRUB_CFG" || true
-
-    # Tambahkan background + warna jika belum ada
-    if ! grep -q 'background_image' "$GRUB_CFG"; then
-      sed -i '1i\
-# chanxOS GRUB theme\
-insmod png\
-insmod gfxterm\
-insmod all_video\
-terminal_output gfxterm\
-if background_image /boot/grub/splash.png; then\
-  set color_normal=white/black\
-  set color_highlight=black/light-cyan\
-fi\
-' "$GRUB_CFG" || true
-    fi
-
-    echo "  [boot-branding] GRUB grub.cfg: patched"
-  fi
-fi
-
-# ── Salin konfigurasi ISOLINUX kita (override upstream) ──────────────────────
+# ── ISOLINUX: copy semua config kita ─────────────────────────────────────
 if [ -d binary/isolinux ]; then
-  # Timpa file konfigurasi dengan versi chanxOS
-  for cfg in isolinux.cfg menu.cfg stdmenu.cfg; do
-    if [ -f "config/bootloaders/isolinux/$cfg" ]; then
-      cp -f "config/bootloaders/isolinux/$cfg" "binary/isolinux/$cfg"
-      echo "  [boot-branding] ISOLINUX $cfg: replaced"
-    fi
+  for f in isolinux.cfg menu.cfg stdmenu.cfg; do
+    [ -f "config/bootloaders/isolinux/$f" ] && \
+      cp -f "config/bootloaders/isolinux/$f" "binary/isolinux/$f"
   done
-
-  # Pastikan MENU TITLE benar di semua .cfg
-  find binary/isolinux -name "*.cfg" | while read -r f; do
-    if grep -q '^MENU TITLE' "$f"; then
-      sed -i "s/^MENU TITLE.*/MENU TITLE  ${BRAND}/" "$f" || true
-    fi
-  done
-
-  echo "  [boot-branding] ISOLINUX config: OK"
 fi
 
-# ── Ganti teks upstream di semua file teks binary ────────────────────────────
-find binary -type f \( -name "*.cfg" -o -name "*.txt" -o -name "*.lst" \) 2>/dev/null | while read -r file; do
+# ── GRUB: patch grub.cfg bawaan live-build ───────────────────────────────
+GRUB_CFG="binary/boot/grub/grub.cfg"
+if [ -f "$GRUB_CFG" ]; then
   sed -i \
     -e 's|Debian GNU/Linux|chanxOS|g' \
     -e 's|Debian Live|chanxOS Live|g' \
-    -e 's|Install Debian|Install chanxOS|g' \
-    -e 's|Start installer|Install chanxOS|g' \
-    -e 's|Live system|Live chanxOS|g' \
-    -e 's|Advanced install options|Advanced chanxOS options|g' \
-    "$file" || true
+    -e 's|Install Debian|Pasang chanxOS|g' \
+    -e 's|Start installer|Pasang chanxOS|g' \
+    -e 's|Live system|chanxOS Live|g' \
+    -e "s|boot=live components quiet splash|$LIVE_PARAMS|g" \
+    -e "s|boot=live components|boot=live components username=chanx hostname=chanxos user-fullname=chanxOS|g" \
+    "$GRUB_CFG" || true
+
+  # Inject background + colors if not present
+  if ! grep -q 'background_image' "$GRUB_CFG"; then
+    sed -i '1i# chanxOS GRUB\ninsmod png\ninsmod gfxterm\ninsmod all_video\nterminal_output gfxterm\nif background_image /boot/grub/splash.png; then\n  set color_normal=white/black\n  set color_highlight=black/cyan\nfi\n' \
+      "$GRUB_CFG" || true
+  fi
+fi
+
+# ── Patch semua teks di .cfg/.txt ────────────────────────────────────────
+find binary -type f \( -name "*.cfg" -o -name "*.txt" -o -name "*.lst" \) 2>/dev/null | while read -r f; do
+  sed -i \
+    -e 's|Debian GNU/Linux|chanxOS|g' \
+    -e 's|Debian Live|chanxOS Live|g' \
+    -e 's|Install Debian|Pasang chanxOS|g' \
+    "$f" 2>/dev/null || true
 done
 
-echo "  [boot-branding] Semua teks upstream: patched"
-echo "  [boot-branding] Selesai."
+echo "[chanxos-branding] Done."

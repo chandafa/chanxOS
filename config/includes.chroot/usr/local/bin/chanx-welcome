@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 # chanxOS Welcome Center
-# Tampilan utama setelah login pertama kali
 set -euo pipefail
 
 VERSION="0.1 Alpha"
@@ -10,11 +9,7 @@ open_term() {
   local cmd="$1"
   local title="${2:-chanxOS}"
   if command -v xfce4-terminal >/dev/null 2>&1; then
-    xfce4-terminal --title="$title" \
-      --hide-menubar \
-      -e "bash -lc \"$cmd; echo; read -rp 'Tekan Enter untuk menutup...' _\"" &
-  elif command -v x-terminal-emulator >/dev/null 2>&1; then
-    x-terminal-emulator -T "$title" \
+    xfce4-terminal --title="$title" --hide-menubar \
       -e "bash -lc \"$cmd; echo; read -rp 'Tekan Enter untuk menutup...' _\"" &
   else
     bash -lc "$cmd" || true
@@ -22,53 +17,52 @@ open_term() {
 }
 
 show_sysinfo() {
-  KERNEL="$(uname -r)"
-  HOSTNAME="$(hostname)"
-  USER="$(whoami)"
-  UPTIME="$(uptime -p 2>/dev/null || uptime | sed 's/.*up //')"
-  SHELL="${SHELL##*/}"
+  K="$(uname -r)"
+  H="$(hostname)"
+  U="$(whoami)"
+  UP="$(uptime -p 2>/dev/null | sed 's/up //' || echo 'N/A')"
+  SH="${SHELL##*/}"
   MEM="$(free -h | awk '/^Mem:/{print $3 " / " $2}')"
-  DISK="$(df -h / | awk 'NR==2{print $3 " / " $2}')"
+  DSK="$(df -h / | awk 'NR==2{print $3 " / " $2}')"
+  zenity --info --title="chanxOS System Info" \
+    --window-icon="chanxos-logo" --width=480 \
+    --text="<span font_family='monospace' size='10000'><b>chanxOS ${VERSION} — ${CODENAME}</b>
 
-  zenity --info \
-    --title="chanxOS System Info" \
-    --window-icon="chanxos-logo" \
-    --width=460 \
-    --text="<span font_family='monospace' size='10000'>\
-<b>chanxOS ${VERSION} — ${CODENAME}</b>
-
-  Kernel   :  ${KERNEL}
-  Hostname :  ${HOSTNAME}
-  User     :  ${USER}
-  Shell    :  ${SHELL}
-  Uptime   :  ${UPTIME}
+  Kernel   :  ${K}
+  Hostname :  ${H}
+  User     :  ${U}
+  Shell    :  ${SH}
+  Uptime   :  ${UP}
   Memory   :  ${MEM}
-  Disk (/) :  ${DISK}
-</span>" 2>/dev/null || true
+  Disk (/) :  ${DSK}</span>" 2>/dev/null || true
 }
 
 show_menu() {
   zenity --list \
     --title="chanxOS Welcome Center" \
     --window-icon="chanxos-welcome" \
-    --width=680 --height=440 \
+    --width=700 --height=500 \
     --text="<span size='large' weight='bold'>Selamat datang di chanxOS ${VERSION}</span>
-<span color='#6a8aa8'>Clean  ·  Minimal  ·  Developer-Friendly</span>" \
-    --column="" --column="Aksi" --column="Deskripsi" \
-    --hide-column=1 \
-    --print-column=1 \
-    "sysinfo"    "  System Info"        "Informasi kernel, memori, dan disk" \
-    "update"     "  Update Sistem"      "Update semua package ke versi terbaru" \
-    "devpack"    "  DevPack Installer"  "Install tools developer pilihan" \
-    "study"      "  Study Mode"         "Timer fokus 25 menit (Pomodoro)" \
-    "learning"   "  Learning Hub"       "Buka catatan belajar chanxOS" \
-    "terminal"   "  Terminal"           "Buka xfce4-terminal" \
-    "install"    "  Install chanxOS"    "Install chanxOS ke hard disk" \
-    "close"      "  Tutup"              "Keluar dari Welcome Center" \
+<span color='#4a7090'>Clean  ·  Minimal  ·  Liquid Glass  ·  Developer-Friendly</span>" \
+    --column="" --column="Fitur" --column="Deskripsi" \
+    --hide-column=1 --print-column=1 \
+    "sysinfo"   "  System Info"         "Kernel, RAM, disk, uptime" \
+    "update"    "  Update Sistem"       "Update semua paket" \
+    "devpack"   "  DevPack Installer"   "Install tools developer" \
+    "study"     "  Study Mode"          "Timer Pomodoro 25 menit" \
+    "focus"     "  Focus Mode"          "Sembunyikan panel dan notifikasi" \
+    "hud"       "  HUD Overlay"         "Info real-time di atas wallpaper" \
+    "note"      "  QuickNote"           "Buka catatan cepat" \
+    "snap"      "  Screenshot"          "Ambil screenshot layar" \
+    "glass"     "  Glass Manager"       "Atur level efek liquid glass" \
+    "theme"     "  Theme Switcher"      "Light / Dark / Auto mode" \
+    "learning"  "  Learning Hub"        "Buka folder catatan belajar" \
+    "terminal"  "  Terminal"            "Buka xfce4-terminal" \
+    "install"   "  Install chanxOS"     "Install chanxOS ke hard disk" \
+    "close"     "  Tutup"               "Keluar dari Welcome Center" \
     2>/dev/null
 }
 
-# ── Main loop ─────────────────────────────────────────────────────────────
 if command -v zenity >/dev/null 2>&1 && [[ -n "${DISPLAY:-}" ]]; then
   while true; do
     CHOICE=$(show_menu) || break
@@ -77,6 +71,12 @@ if command -v zenity >/dev/null 2>&1 && [[ -n "${DISPLAY:-}" ]]; then
       update)    open_term "chanx-update" "chanxOS Update" ;;
       devpack)   chanx-devpack & ;;
       study)     open_term "chanx-study-mode 25" "chanxOS Study Mode" ;;
+      focus)     chanx-focus toggle & ;;
+      hud)       chanx-hud & ;;
+      note)      chanx-quicknote & ;;
+      snap)      chanx-snap & ;;
+      glass)     chanx-glass & ;;
+      theme)     chanx-theme & ;;
       learning)  xdg-open "${HOME}/ChanxOS-Learning" 2>/dev/null || \
                    thunar "${HOME}/ChanxOS-Learning" 2>/dev/null || true ;;
       terminal)  xfce4-terminal --hide-menubar & ;;
@@ -85,16 +85,14 @@ if command -v zenity >/dev/null 2>&1 && [[ -n "${DISPLAY:-}" ]]; then
     esac
   done
 else
-  # Non-GUI fallback
-  cat <<'TXT'
-chanxOS Welcome Center
-======================
-Commands:
-  chanx-info         System information
-  chanx-update       Update packages
-  chanx-devpack      Install developer tools
-  chanx-study-mode 25  25-minute focus timer
-  chanx-clean        Clean package cache
-  chanx-install      Install to disk
-TXT
+  printf 'chanxOS Welcome — Fitur tersedia:\n'
+  printf '  chanx-info        System info\n'
+  printf '  chanx-update      Update paket\n'
+  printf '  chanx-devpack     DevPack installer\n'
+  printf '  chanx-study-mode  Pomodoro timer\n'
+  printf '  chanx-focus       Focus mode\n'
+  printf '  chanx-hud         HUD overlay\n'
+  printf '  chanx-glass       Glass level\n'
+  printf '  chanx-theme       Theme switcher\n'
+  printf '  chanx-install     Install ke disk\n'
 fi

@@ -3,52 +3,80 @@
 # Konfigurasi sistem, branding, dan default user environment
 set -e
 
-# ── 1. Executable permissions ─────────────────────────────────────────────────
+LIVEUSER="chanx"
+
+# ── 1. Executable permissions ─────────────────────────────────────────────
 chmod +x /usr/local/bin/chanx-* 2>/dev/null || true
 
-# ── 2. NetworkManager ─────────────────────────────────────────────────────────
+# ── 2. Locale ─────────────────────────────────────────────────────────────
+if [ -f /etc/locale.gen ]; then
+  # Aktifkan en_US.UTF-8 dan id_ID.UTF-8
+  sed -i 's|^# *en_US.UTF-8 UTF-8|en_US.UTF-8 UTF-8|' /etc/locale.gen 2>/dev/null || true
+  sed -i 's|^# *id_ID.UTF-8 UTF-8|id_ID.UTF-8 UTF-8|' /etc/locale.gen 2>/dev/null || true
+  locale-gen 2>/dev/null || true
+fi
+cat > /etc/default/locale <<'EOF'
+LANG=en_US.UTF-8
+LANGUAGE=en_US:en
+LC_ALL=en_US.UTF-8
+EOF
+
+# ── 3. XDG user dirs ──────────────────────────────────────────────────────
+if command -v xdg-user-dirs-update >/dev/null 2>&1; then
+  HOME=/home/$LIVEUSER xdg-user-dirs-update 2>/dev/null || true
+fi
+
+# ── 4. NetworkManager ─────────────────────────────────────────────────────
 mkdir -p /etc/NetworkManager/conf.d
-cat > /etc/NetworkManager/conf.d/chanxos.conf <<'CFG'
+cat > /etc/NetworkManager/conf.d/chanxos.conf <<'EOF'
 [main]
 plugins=ifupdown,keyfile
-
 [ifupdown]
 managed=true
-CFG
+EOF
 
-# ── 3. LightDM — auto-login chanx ────────────────────────────────────────────
+# Pastikan NetworkManager tidak bertabrakan dengan /etc/network/interfaces
+if [ -f /etc/network/interfaces ]; then
+  # Hanya loopback di interfaces, sisanya dikelola NM
+  cat > /etc/network/interfaces <<'EOF'
+# chanxOS: network managed by NetworkManager
+auto lo
+iface lo inet loopback
+EOF
+fi
+
+# ── 5. LightDM autologin ──────────────────────────────────────────────────
 mkdir -p /etc/lightdm
-cat > /etc/lightdm/lightdm.conf <<'CFG'
+cat > /etc/lightdm/lightdm.conf <<EOF
 [LightDM]
 run-directory=/run/lightdm
 
 [Seat:*]
 greeter-session=lightdm-gtk-greeter
 user-session=xfce
-autologin-user=chanx
+autologin-user=${LIVEUSER}    # = chanx
 autologin-user-timeout=0
 allow-guest=false
-CFG
+EOF
 
-cat > /etc/lightdm/lightdm-gtk-greeter.conf <<'CFG'
+cat > /etc/lightdm/lightdm-gtk-greeter.conf <<'EOF'
 [greeter]
 background=/usr/share/backgrounds/chanxos/lockscreen.png
 theme-name=ChanxGlass
 icon-theme-name=Papirus
 font-name=Inter 10
 clock-format=%H:%M  %A, %d %B %Y
-indicators=~host;~spacer;~clock;~spacer;~session;~language;~a11y;~power
+indicators=~host;~spacer;~clock;~spacer;~session;~a11y;~power
 position=50%,center 50%,center
 xft-antialias=true
 xft-dpi=96
 xft-hintstyle=hintslight
 xft-rgba=rgb
-default-user-image=#chanxos-logo
-CFG
+EOF
 
-# ── 4. GTK system defaults ────────────────────────────────────────────────────
+# ── 6. GTK system defaults ────────────────────────────────────────────────
 mkdir -p /etc/gtk-3.0
-cat > /etc/gtk-3.0/settings.ini <<'CFG'
+cat > /etc/gtk-3.0/settings.ini <<'EOF'
 [Settings]
 gtk-theme-name=ChanxGlass
 gtk-icon-theme-name=Papirus
@@ -63,17 +91,25 @@ gtk-xft-antialias=1
 gtk-xft-dpi=96000
 gtk-xft-hintstyle=hintslight
 gtk-xft-rgba=rgb
-CFG
+EOF
 
-# ── 5. Skel: xsession ─────────────────────────────────────────────────────────
-cat > /etc/skel/.xsession <<'CFG'
+mkdir -p /etc/gtk-2.0
+cat > /etc/gtk-2.0/gtkrc <<'EOF'
+gtk-theme-name="ChanxGlass"
+gtk-icon-theme-name="Papirus"
+gtk-font-name="Inter 10"
+gtk-cursor-theme-name="Adwaita"
+EOF
+
+# ── 7. xsession ───────────────────────────────────────────────────────────
+cat > /etc/skel/.xsession <<'EOF'
 exec startxfce4
-CFG
+EOF
 chmod +x /etc/skel/.xsession 2>/dev/null || true
 
-# ── 6. Shell aliases + env ────────────────────────────────────────────────────
-cat > /etc/profile.d/chanxos.sh <<'CFG'
-# chanxOS shell helpers
+# ── 8. Shell environment ──────────────────────────────────────────────────
+cat > /etc/profile.d/chanxos.sh <<'EOF'
+# chanxOS shell environment
 alias cupdate='chanx-update'
 alias cinfo='chanx-info'
 alias cdev='chanx-devpack'
@@ -81,31 +117,24 @@ alias cinstall='chanx-install'
 alias cglass='chanx-glass'
 alias ctheme='chanx-theme'
 alias cstudy='chanx-study-mode'
+alias cclean='chanx-clean'
 
-# Pretty prompt
 export PS1='\[\033[1;36m\]chanx\[\033[0;37m\]@\[\033[1;36m\]\h\[\033[0m\]:\[\033[1;34m\]\w\[\033[0m\]\$ '
-
-# XDG
+export EDITOR=nano
+export VISUAL=nano
 export XDG_DATA_HOME="${HOME}/.local/share"
 export XDG_CONFIG_HOME="${HOME}/.config"
 export XDG_CACHE_HOME="${HOME}/.cache"
-CFG
+EOF
 
-# ── 7. Plymouth boot theme ────────────────────────────────────────────────────
-if [ -d /usr/share/plymouth/themes/chanxos ]; then
-  # Ensure logo.png exists (Plymouth looks for this)
-  if [ ! -f /usr/share/plymouth/themes/chanxos/logo.png ] && \
-     [ -f /usr/share/plymouth/themes/chanxos/chanxos-logo.png ]; then
-    cp /usr/share/plymouth/themes/chanxos/chanxos-logo.png \
-       /usr/share/plymouth/themes/chanxos/logo.png
+# ── 9. Plymouth boot theme ────────────────────────────────────────────────
+PLYMOUTH_DIR="/usr/share/plymouth/themes/chanxos"
+if [ -d "$PLYMOUTH_DIR" ]; then
+  # Pastikan logo.png ada
+  if [ ! -f "${PLYMOUTH_DIR}/logo.png" ] && \
+     [ -f "${PLYMOUTH_DIR}/chanxos-logo.png" ]; then
+    cp "${PLYMOUTH_DIR}/chanxos-logo.png" "${PLYMOUTH_DIR}/logo.png"
   fi
-  # Also copy background if missing
-  if [ ! -f /usr/share/plymouth/themes/chanxos/background.png ] && \
-     [ -f /usr/share/backgrounds/chanxos/wallpaper.png ]; then
-    cp /usr/share/backgrounds/chanxos/wallpaper.png \
-       /usr/share/plymouth/themes/chanxos/background.png 2>/dev/null || true
-  fi
-
   if command -v plymouth-set-default-theme >/dev/null 2>&1; then
     plymouth-set-default-theme chanxos 2>/dev/null || true
   fi
@@ -114,53 +143,65 @@ if [ -d /usr/share/plymouth/themes/chanxos ]; then
   fi
 fi
 
-# ── 8. Desktop shortcuts ──────────────────────────────────────────────────────
+# ── 10. Desktop shortcuts ─────────────────────────────────────────────────
 mkdir -p /etc/skel/Desktop
-for src in chanx-install chanx-welcome chanx-devpack; do
-  if [ -f /usr/share/applications/${src}.desktop ]; then
-    cp /usr/share/applications/${src}.desktop \
-       "/etc/skel/Desktop/${src}.desktop" 2>/dev/null || true
-    chmod +x "/etc/skel/Desktop/${src}.desktop" 2>/dev/null || true
-  fi
-done
-# Rename for display
-[ -f /etc/skel/Desktop/chanx-install.desktop ]  && \
-  cp /etc/skel/Desktop/chanx-install.desktop  "/etc/skel/Desktop/Install chanxOS.desktop"   2>/dev/null || true
-[ -f /etc/skel/Desktop/chanx-welcome.desktop ] && \
-  cp /etc/skel/Desktop/chanx-welcome.desktop  "/etc/skel/Desktop/Welcome chanxOS.desktop"  2>/dev/null || true
-# Remove originals with underscore names
-rm -f /etc/skel/Desktop/chanx-install.desktop \
-      /etc/skel/Desktop/chanx-welcome.desktop \
-      /etc/skel/Desktop/chanx-devpack.desktop 2>/dev/null || true
-
-# ── 9. Installer desktop file ─────────────────────────────────────────────────
-if [ -f /usr/share/applications/install-debian.desktop ]; then
-  sed -i 's/^Name=.*/Name=Install chanxOS/' /usr/share/applications/install-debian.desktop || true
-  sed -i 's/^Comment=.*/Comment=Install chanxOS to your hard disk/' /usr/share/applications/install-debian.desktop || true
-  grep -q '^Icon=' /usr/share/applications/install-debian.desktop && \
-    sed -i 's|^Icon=.*|Icon=chanxos-installer|' /usr/share/applications/install-debian.desktop || \
-    printf '\nIcon=chanxos-installer\n' >> /usr/share/applications/install-debian.desktop
+# Install shortcut
+if [ -f /usr/share/applications/chanx-install.desktop ]; then
+  cp /usr/share/applications/chanx-install.desktop \
+     "/etc/skel/Desktop/Install chanxOS.desktop" 2>/dev/null || true
+  chmod +x "/etc/skel/Desktop/Install chanxOS.desktop" 2>/dev/null || true
+fi
+# Welcome shortcut
+if [ -f /usr/share/applications/chanx-welcome.desktop ]; then
+  cp /usr/share/applications/chanx-welcome.desktop \
+     "/etc/skel/Desktop/Welcome.desktop" 2>/dev/null || true
+  chmod +x "/etc/skel/Desktop/Welcome.desktop" 2>/dev/null || true
 fi
 
-# ── 10. Update desktop DB ─────────────────────────────────────────────────────
+# ── 11. Ganti teks branding Debian → chanxOS di desktop apps ─────────────
+for f in /usr/share/applications/install-debian.desktop \
+          /usr/share/applications/install.desktop; do
+  [ -f "$f" ] || continue
+  sed -i \
+    -e 's/^Name=.*/Name=Install chanxOS/' \
+    -e 's/^Comment=.*/Comment=Install chanxOS to your hard disk/' \
+    "$f" 2>/dev/null || true
+done
+
+# ── 12. Update desktop database ───────────────────────────────────────────
 command -v update-desktop-database >/dev/null 2>&1 && \
   update-desktop-database /usr/share/applications 2>/dev/null || true
 
-echo "[chanxos-setup] Chroot setup complete."
+# ── 13. Issue / login banner ──────────────────────────────────────────────
+cat > /etc/issue <<'EOF'
+chanxOS 0.1 Alpha (Glass Fox)
+Live: user=chanx  password=live
 
-# ── 11. Login hint di greeter ─────────────────────────────────────────────────
-# Tulis hint user/pass ke /etc/issue.net supaya muncul di console
-cat > /etc/issue.net <<'ISSUE'
-chanxOS 0.1 Alpha — Live Session
-Username: chanx  |  Password: live
-ISSUE
+EOF
+cat > /etc/issue.net <<'EOF'
+chanxOS 0.1 Alpha (Glass Fox) — live session: chanx / live
+EOF
 
-# Pastikan LightDM greeter menampilkan hostname (sudah default tapi kita konfirmasi)
-if [ -f /etc/lightdm/lightdm-gtk-greeter.conf ]; then
-  # Tambah/update indicators untuk tampilkan info yang berguna
-  grep -q "^indicators=" /etc/lightdm/lightdm-gtk-greeter.conf || \
-    printf '\nindicators=~host;~spacer;~clock;~spacer;~session;~a11y;~power\n' \
-    >> /etc/lightdm/lightdm-gtk-greeter.conf
-fi
+# ── 14. os-release ────────────────────────────────────────────────────────
+cat > /etc/os-release <<'EOF'
+PRETTY_NAME="chanxOS 0.1 Alpha (Glass Fox)"
+NAME="chanxOS"
+VERSION_ID="0.1"
+VERSION="0.1 Alpha (Glass Fox)"
+VERSION_CODENAME="glassfox"
+ID=chanxos
+ID_LIKE=debian
+HOME_URL="https://github.com/chanxos"
+SUPPORT_URL="https://github.com/chanxos/issues"
+BUG_REPORT_URL="https://github.com/chanxos/issues"
+EOF
 
-echo "[chanxos-setup] Login hints: done."
+# ── 15. Login hint di /etc/chanxos ────────────────────────────────────────
+mkdir -p /etc/chanxos
+cat > /etc/chanxos/live-credentials <<EOF
+LIVE_USER=${LIVEUSER}
+LIVE_PASS=live
+EOF
+chmod 644 /etc/chanxos/live-credentials
+
+echo "[chanxos-setup] Chroot setup selesai."

@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# chanxOS Snap — Screenshot + langsung share/anotasi
+set -euo pipefail
+
+SAVEDIR="${HOME}/Pictures/Screenshots"
+mkdir -p "$SAVEDIR"
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+
+take_shot() {
+  local mode="$1"
+  local FILE="${SAVEDIR}/chanx-${mode}-${TIMESTAMP}.png"
+
+  if command -v xfce4-screenshooter >/dev/null 2>&1; then
+    case "$mode" in
+      full)   xfce4-screenshooter -f -s "$SAVEDIR" ;;
+      window) xfce4-screenshooter -w -s "$SAVEDIR" ;;
+      area)   xfce4-screenshooter -r -s "$SAVEDIR" ;;
+    esac
+    return
+  fi
+  if command -v scrot >/dev/null 2>&1; then
+    case "$mode" in
+      full)   scrot "$FILE" ;;
+      window) scrot -u "$FILE" ;;
+      area)   scrot -s "$FILE" ;;
+    esac
+    notify-send "chanxOS Snap" "Screenshot disimpan ke $FILE" \
+      --icon=chanxos-logo 2>/dev/null || true
+    return
+  fi
+  echo "Tidak ada screenshot tool. Install: sudo apt install xfce4-screenshooter"
+}
+
+case "${1:-gui}" in
+  full)   take_shot full ;;
+  window) take_shot window ;;
+  area)   take_shot area ;;
+  gui|*)
+    if command -v zenity >/dev/null 2>&1 && [[ -n "${DISPLAY:-}" ]]; then
+      CHOICE=$(zenity --list \
+        --title="chanxOS Snap" \
+        --window-icon=chanxos-logo \
+        --width=380 --height=280 \
+        --text="Pilih mode screenshot:" \
+        --column="ID" --column="Mode" --column="Keterangan" \
+        --hide-column=1 --print-column=1 \
+        "full"   "  Layar Penuh"    "Screenshot seluruh layar" \
+        "window" "  Window Aktif"   "Screenshot jendela yang sedang aktif" \
+        "area"   "  Pilih Area"     "Screenshot area tertentu (klik-drag)" \
+        2>/dev/null) || exit 0
+      take_shot "$CHOICE"
+    else
+      take_shot full
+    fi ;;
+esac

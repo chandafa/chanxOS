@@ -1,5 +1,5 @@
+# chanxOS Applications
 firefox-esr
-thunar
 mousepad
 xfce4-terminal
 ristretto
@@ -7,3 +7,8 @@ evince
 file-roller
 unzip
 zip
+p7zip-full
+thunar
+xarchiver
+gedit
+eog

@@ -11,13 +11,13 @@
 
 **chanxOS 0.1 Alpha  ·  Codename: Glass Fox**
 
-Linux berbasis Debian dengan tampilan *Liquid Glass* — bersih, ringan, dan ramah developer.
+Linux berbasis Debian 12 dengan tampilan *Liquid Glass* — bersih, ringan, dan penuh fitur unik.
 
-![Status](https://img.shields.io/badge/status-alpha-orange?style=flat-square)
-![Base](https://img.shields.io/badge/base-Debian%2012%20Bookworm-red?style=flat-square&logo=debian)
-![Desktop](https://img.shields.io/badge/desktop-XFCE%204-blue?style=flat-square)
-![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)
-![Arch](https://img.shields.io/badge/arch-amd64-lightgrey?style=flat-square)
+[![Status](https://img.shields.io/badge/status-alpha-orange?style=flat-square)](.)
+[![Base](https://img.shields.io/badge/base-Debian%2012%20Bookworm-red?style=flat-square&logo=debian)](.)
+[![Desktop](https://img.shields.io/badge/desktop-XFCE%204-4a9eda?style=flat-square)](.)
+[![License](https://img.shields.io/badge/license-MIT-22bb66?style=flat-square)](.)
+[![Arch](https://img.shields.io/badge/arch-amd64-888?style=flat-square)](.)
 
 </div>
 
@@ -25,85 +25,129 @@ Linux berbasis Debian dengan tampilan *Liquid Glass* — bersih, ringan, dan ram
 
 ## Tentang chanxOS
 
-**chanxOS** adalah distribusi Linux custom berbasis Debian 12 Bookworm dengan identitas visual *Liquid Glass* — terinspirasi dari estetika macOS dan CuteFish OS, namun tetap ringan dan berjalan di atas XFCE 4.
+**chanxOS** adalah distribusi Linux custom berbasis Debian 12 Bookworm, didesain dengan filosofi *Liquid Glass* — jendela buram, panel transparan, efek blur, sudut rounded, dan bayangan halus yang menyatu secara harmonis.
 
 Dibangun untuk:
 - 🎓 Pelajar & mahasiswa yang baru belajar Linux
-- 💻 Developer yang butuh lingkungan coding yang bersih
+- 💻 Developer yang butuh environment coding yang bersih
 - 🧪 Pengembang OS yang ingin belajar membuat distro sendiri
 
-> **Ini adalah project edukasi / eksperimental.** Cocok untuk belajar, bukan untuk server production.
+> **Project edukasi / eksperimental.** Cocok untuk belajar, bukan server production.
 
 ---
 
-## ✨ Fitur Unggulan
+## ✨ Fitur Unik chanxOS
 
-### Liquid Glass UI
-Efek *frosted glass* di seluruh antarmuka — window blur, panel transparan, rounded corners, dan shadow yang halus. Semua dirender oleh Picom compositor dengan backend GLX (atau xrender sebagai fallback untuk VM).
+Fitur-fitur berikut **tidak tersedia secara default di Ubuntu, Fedora, atau Mint**:
 
-### chanx-glass  *(Fitur Unik)*
-Toggle level efek visual langsung dari desktop atau terminal:
+### 1. Glass Manager (`chanx-glass` / `Super+G`)
+Toggle level efek visual tanpa logout atau reboot:
+| Level | Nama | Efek |
+|---|---|---|
+| 0 | Off | Tanpa compositor — performa maksimal |
+| 1 | Minimal | Shadow saja — cocok untuk VM lama |
+| 2 | Standard | Rounded corners + fading *(default)* |
+| 3 | Full Glass | Blur `dual_kawase` + semua efek — butuh GPU |
+
+### 2. Theme Switcher (`chanx-theme`)
+Ganti mode tampilan instan tanpa logout:
+- **Light Glass** — terang, segar (default siang hari)
+- **Dark Glass** — gelap, elegan (default malam)
+- **Auto** — otomatis ikuti jam sistem (07:00–19:00 = light)
+
+### 3. Focus Mode (`chanx-focus` / `Super+F`)
+Satu perintah untuk meminimalisir gangguan:
+- Sembunyikan panel XFCE
+- Pause semua notifikasi sistem
+- Set desktop ke warna solid gelap (distraction-free)
+- Toggle kembali kapan saja
+
+### 4. HUD Overlay (`chanx-hud` / `Super+H`)
+Overlay informasi real-time langsung di atas wallpaper (via Conky):
+- CPU usage, RAM, disk, network up/down
+- Jam dan tanggal live
+- Transparan, tidak menghalangi apapun
+
+### 5. QuickNote (`chanx-quicknote` / `Super+N`)
+Catatan cepat tersimpan permanen di `~/.config/chanxos/notes/quicknote.txt`:
+```bash
+chanx-quicknote add "ide proyek baru"   # tambah dari terminal
+chanx-quicknote list                    # lihat semua catatan
+chanx-quicknote                         # buka di editor GUI
 ```
-Level 0 — Off        (tanpa compositor, performa maksimal)
-Level 1 — Minimal    (shadow saja, cocok untuk VM)
-Level 2 — Standard   (rounded + fading, default)
-Level 3 — Full Glass (blur penuh + semua efek, butuh GPU)
-```
 
-### chanx-theme  *(Fitur Unik)*
-Ganti mode tampilan tanpa logout:
-```
-Light Glass  — terang, segar (default siang)
-Dark Glass   — gelap, elegan (default malam)
-Auto         — otomatis ikuti waktu sistem (07:00–19:00 = light)
-```
+### 6. Snap (`chanx-snap` / `Print`)
+Screenshot dengan shortcut pintar:
+| Shortcut | Mode |
+|---|---|
+| `Print` | Area pilih (klik-drag) |
+| `Alt+Print` | Window aktif |
+| `Shift+Print` | Layar penuh |
+| `Super+Snap` | GUI mode picker |
 
-### chanxOS Welcome Center
-Pusat kontrol yang muncul otomatis saat login pertama. Akses semua fitur utama dari satu jendela.
-
-### DevPack Installer
-Install paket developer hanya dengan satu klik:
+### 7. DevPack Installer (`chanx-devpack`)
+Install paket developer dengan satu klik:
 - **Web Developer** — Git, Node.js, npm, build-essential
 - **Laravel / PHP** — PHP, Composer, MariaDB client
 - **Rust Developer** — Rustup, Cargo, build tools
 - **Python Dev** — Python 3, pip, venv, dev headers
 - **Student Pack** — LibreOffice, Evince, Flameshot, GParted
 
-### Study Mode
-Timer Pomodoro bawaan dengan progress bar. Jalankan `chanx-study-mode 25` untuk sesi fokus 25 menit.
+### 8. Study Mode (`chanx-study-mode [menit]`)
+Timer Pomodoro dengan progress bar GUI dan notifikasi sistem.
 
 ---
 
-## 🖥️ Tampilan Sistem
+## 🖥️ Spesifikasi Sistem
 
-| Komponen       | Detail                              |
-|----------------|-------------------------------------|
-| Base           | Debian 12 Bookworm                  |
-| Desktop        | XFCE 4                              |
-| Window Manager | XFWM4 + Picom (Liquid Glass)        |
-| Theme          | ChanxGlass (custom GTK2/3)          |
-| Icon Theme     | Papirus                             |
-| Dock           | Plank (ChanxGlass theme)            |
-| Font           | Inter + DejaVu Sans Mono            |
-| Compositor     | Picom (GLX blur / xrender fallback) |
-| Terminal       | XFCE4-Terminal (dark translucent)   |
-| File Manager   | Thunar                              |
-| Browser        | Firefox ESR                         |
-| Greeter        | LightDM GTK                         |
+| Komponen | Detail |
+|---|---|
+| Base | Debian 12 Bookworm |
+| Desktop | XFCE 4 |
+| Window Manager | XFWM4 (compositing built-in) |
+| Compositor | Picom — GLX blur / xrender fallback |
+| Theme | ChanxGlass (GTK2/3 custom) |
+| Icon Theme | Papirus |
+| Dock | Plank (ChanxGlass theme) |
+| Font | Inter + DejaVu Sans Mono |
+| Terminal | XFCE4-Terminal (dark translucent) |
+| File Manager | Thunar + Volman |
+| Browser | Firefox ESR |
+| Login Manager | LightDM GTK |
+| Panel | XFCE4-Panel (frosted glass, top bar) |
 
 ---
 
 ## 🔐 Login Live Session
 
-Saat menjalankan chanxOS dari ISO (Live Mode):
+| Field | Nilai |
+|---|---|
+| **Username** | `chanx` |
+| **Password** | `live` |
+| **Hostname** | `chanxos` |
 
-| Field      | Value      |
-|------------|------------|
-| **Username** | `chanx`  |
-| **Password** | `live`   |
-| **Hostname** | `chanxos`|
+> LightDM dikonfigurasi untuk **autologin** — kamu langsung masuk desktop.
+> Password `live` diperlukan untuk dialog `sudo` atau screen lock.
 
-> LightDM dikonfigurasi untuk **autologin** — kamu langsung masuk desktop tanpa perlu mengetik password. Password `live` diperlukan jika ada dialog sudo atau screen lock.
+---
+
+## ⌨️ Keyboard Shortcuts
+
+| Shortcut | Fungsi |
+|---|---|
+| `Super+E` | Buka Thunar (file manager) |
+| `Super+T` | Buka Terminal |
+| `Super+W` | Buka Welcome Center |
+| `Super+F` | Toggle Focus Mode |
+| `Super+G` | Buka Glass Manager |
+| `Super+H` | Toggle HUD Overlay |
+| `Super+N` | Buka QuickNote |
+| `Print` | Screenshot area |
+| `Alt+Print` | Screenshot window aktif |
+| `Shift+Print` | Screenshot layar penuh |
+| `Super+Left/Right` | Tile window kiri/kanan |
+| `Super+Up` | Maximize window |
+| `Super+D` | Show desktop |
 
 ---
 
@@ -111,30 +155,31 @@ Saat menjalankan chanxOS dari ISO (Live Mode):
 
 ### Prasyarat
 
-- Linux (Debian 12 / Ubuntu 22.04+) — bisa di VM
-- RAM minimal 2 GB, disk minimal 20 GB
-- Koneksi internet stabil
+| Item | Kebutuhan |
+|---|---|
+| OS | Debian 12 / Ubuntu 22.04+ (atau VM) |
+| RAM | Minimal 2 GB (disarankan 4 GB) |
+| Disk | Minimal 20 GB free |
+| Network | Koneksi internet stabil |
 
-### Opsi 1 — Build Lokal
+### Build Lokal
 
 ```bash
-# Install dependensi build
+# 1. Install dependensi
 sudo apt update
 sudo apt install -y live-build debootstrap xorriso squashfs-tools \
-  isolinux syslinux-common syslinux-utils git
+  isolinux syslinux-common syslinux-utils git openssl
 
-# Clone / extract project
+# 2. Clone / extract project
 cd chanxOS
 
-# Siapkan dependensi tambahan
-chmod +x scripts/install-build-deps.sh
-./scripts/install-build-deps.sh
+# 3. Beri izin eksekusi
+chmod +x build.sh clean.sh
+chmod +x config/hooks/normal/*.hook.chroot
+chmod +x config/hooks/normal/*.hook.binary
+chmod +x config/includes.chroot/usr/local/bin/chanx-*
 
-# Validasi (opsional tapi disarankan)
-./tools/test-scripts.sh
-./tools/diagnose-build-env.sh
-
-# Build!
+# 4. Build
 ALLOW_ROOT_BUILD=1 ./build.sh
 ```
 
@@ -144,50 +189,37 @@ chanxOS-0.1-alpha-amd64.iso
 SHA256SUMS
 ```
 
-### Opsi 2 — Build via GitHub Actions
-
-Project sudah dilengkapi workflow otomatis:
+### Build via GitHub Actions
 
 ```
 .github/workflows/build-iso.yml
 ```
 
-1. Upload project ke GitHub (repo publik atau privat)
-2. Buka tab **Actions**
-3. Pilih **Build chanxOS ISO**
-4. Klik **Run workflow**
-
-ISO akan tersedia di **Releases** setelah build selesai (~30–60 menit).
+1. Upload ke GitHub
+2. Tab **Actions** → **Build chanxOS ISO** → **Run workflow**
+3. ISO tersedia di **Releases** setelah ~30–60 menit
 
 > Panduan lengkap: `docs/BUILD_ON_GITHUB.md`
 
 ---
 
-## 🧰 Perintah Tersedia
+## 🧰 Semua Perintah chanxOS
 
-Setelah login ke chanxOS, perintah berikut tersedia di terminal:
-
-| Perintah | Fungsi |
-|---|---|
-| `chanx-info` | Informasi sistem (neofetch-style) |
-| `chanx-update` | Update semua paket |
-| `chanx-devpack` | Install paket developer |
-| `chanx-study-mode [menit]` | Timer fokus Pomodoro |
-| `chanx-clean` | Bersihkan cache dan paket orphan |
-| `chanx-glass [0-3]` | Atur level efek liquid glass |
-| `chanx-theme [light\|dark\|auto]` | Ganti mode tampilan |
-| `chanx-install` | Buka installer chanxOS |
-| `chanx-welcome` | Buka Welcome Center |
-
-**Alias singkat:**
-```bash
-cinfo     # chanx-info
-cupdate   # chanx-update
-cdev      # chanx-devpack
-cglass    # chanx-glass
-ctheme    # chanx-theme
-cinstall  # chanx-install
-```
+| Perintah | Alias | Fungsi |
+|---|---|---|
+| `chanx-info` | `cinfo` | Info sistem (neofetch-style) |
+| `chanx-update` | `cupdate` | Update semua paket |
+| `chanx-clean` | `cclean` | Bersihkan cache |
+| `chanx-devpack` | `cdev` | Install paket developer |
+| `chanx-study-mode [mnt]` | `cstudy` | Timer Pomodoro |
+| `chanx-focus` | `cfocus` | Toggle focus mode |
+| `chanx-glass [0-3]` | `cglass` | Atur level efek glass |
+| `chanx-theme [light\|dark\|auto]` | `ctheme` | Ganti mode tampilan |
+| `chanx-hud [on\|off]` | `chud` | Toggle HUD overlay |
+| `chanx-snap [full\|window\|area]` | `csnap` | Screenshot |
+| `chanx-quicknote` | `cnote` | Catatan cepat |
+| `chanx-install` | `cinstall` | Buka installer |
+| `chanx-welcome` | — | Welcome Center |
 
 ---
 
@@ -195,95 +227,50 @@ cinstall  # chanx-install
 
 ```
 chanxOS/
-├── build.sh                        ← Script build utama
-├── clean.sh                        ← Bersihkan hasil build
+├── build.sh                          ← Build utama
+├── clean.sh                          ← Bersihkan build
 ├── config/
-│   ├── binary                      ← Opsi squashfs (LB_MKSQUASHFS_OPTIONS)
+│   ├── binary                        ← LB_MKSQUASHFS_OPTIONS
 │   ├── bootloaders/
-│   │   ├── grub-efi/               ← Konfigurasi GRUB (UEFI)
-│   │   │   ├── config.cfg
-│   │   │   └── splash.png
-│   │   └── isolinux/               ← Konfigurasi ISOLINUX (BIOS)
-│   │       ├── isolinux.cfg
-│   │       ├── menu.cfg
-│   │       ├── stdmenu.cfg
-│   │       └── splash.png
+│   │   ├── grub-efi/config.cfg       ← GRUB menu (UEFI)
+│   │   └── isolinux/menu.cfg         ← ISOLINUX menu (BIOS)
 │   ├── hooks/normal/
-│   │   ├── 0050-chanxos-user-password.hook.chroot   ← Set user chanx/live
-│   │   ├── 0100-chanxos-setup.hook.chroot           ← Setup sistem
-│   │   └── 9000-chanxos-boot-branding.hook.binary   ← Branding ISO
+│   │   ├── 0050-*.hook.chroot        ← Set user chanx / password live
+│   │   ├── 0100-*.hook.chroot        ← Setup sistem & branding
+│   │   └── 9000-*.hook.binary        ← Patch teks Debian → chanxOS
 │   ├── includes.chroot/
 │   │   ├── etc/
-│   │   │   ├── lightdm/            ← Autologin config
-│   │   │   ├── skel/               ← Template home user
-│   │   │   └── os-release          ← Identitas OS
+│   │   │   ├── lightdm/              ← Autologin config
+│   │   │   ├── profile.d/chanxos.sh  ← Aliases & env
+│   │   │   ├── skel/                 ← Template home user
+│   │   │   └── os-release            ← chanxOS identity
 │   │   └── usr/
-│   │       ├── local/bin/chanx-*   ← Semua tools chanxOS
-│   │       └── share/themes/ChanxGlass/   ← GTK2/3 theme
+│   │       ├── local/bin/chanx-*     ← Semua tools (12 tools)
+│   │       └── share/themes/ChanxGlass/  ← GTK2/3 theme
 │   └── package-lists/
-│       ├── 00-core.list.chroot
-│       ├── 10-desktop-xfce.list.chroot
-│       ├── 20-apps.list.chroot
-│       ├── 30-devtools.list.chroot
-│       ├── 40-chanxos-features.list.chroot
+│       ├── 00-core.list.chroot       ← Kernel, openssl, network
+│       ├── 10-desktop-xfce.list.chroot  ← XFCE4, picom, plank
+│       ├── 20-apps.list.chroot       ← Firefox, mousepad, evince
+│       ├── 30-devtools.list.chroot   ← git, python3, nano
+│       ├── 40-chanxos-features.list.chroot ← zenity, notify-bin
 │       └── 50-installer-calamares.list.chroot
-├── branding/                       ← Logo, wallpaper, splash (SVG + PNG)
-├── docs/                           ← Dokumentasi tambahan
-│   ├── BUILD_GUIDE.md
-│   ├── BUILD_ON_GITHUB.md
-│   └── ROADMAP.md
-├── scripts/
-│   └── install-build-deps.sh       ← Install dependensi build
-└── tools/
-    ├── diagnose-build-env.sh
-    ├── test-scripts.sh
-    └── test-packages.sh
+├── branding/                         ← Logo, wallpaper (SVG+PNG)
+├── docs/                             ← Dokumentasi
+└── tools/                            ← Test & diagnose scripts
 ```
-
----
-
-## 🧪 Testing Tanpa Full Build
-
-Untuk memvalidasi project tanpa menjalankan build lengkap:
-
-```bash
-# Cek semua script ada dan bisa dieksekusi
-./tools/test-scripts.sh
-
-# Cek environment build tersedia
-./tools/diagnose-build-env.sh
-
-# Validasi package list (butuh Debian 12 / Ubuntu)
-./tools/test-packages.sh
-```
-
-Untuk test ISO di QEMU:
-```bash
-./tools/test-qemu.sh chanxOS-0.1-alpha-amd64.iso
-```
-
----
-
-## 📋 Catatan Penting
-
-- Build ISO butuh environment Linux, koneksi internet, dan ≥20 GB ruang disk.
-- Selalu test di VM sebelum install ke mesin fisik.
-- Calamares membutuhkan konfigurasi tambahan untuk instalasi penuh — lihat `docs/BUILD_GUIDE.md`.
-- Efek blur penuh (`chanx-glass 3`) membutuhkan GPU dengan dukungan OpenGL / GLX. Di VM, gunakan level 1 atau 2.
 
 ---
 
 ## 🗺️ Roadmap
 
-- [ ] Konfigurasi Calamares installer yang lengkap
-- [ ] Custom GRUB splash yang dirender via Python/Pillow
-- [ ] chanx-glass level 4: Acrylic-style blur (mica effect)
-- [ ] chanx-update GUI (progress window)
-- [ ] Dukungan arm64
+- [ ] Konfigurasi Calamares installer lengkap
+- [ ] chanx-settings — Settings Center GUI terpadu
 - [ ] Dark Glass GTK theme variant terpisah
-- [ ] chanxOS Settings Center (GUI terpadu)
-
-Lihat: `docs/ROADMAP.md`
+- [ ] chanx-glass level 4: Acrylic/Mica effect
+- [ ] Dukungan arm64
+- [ ] chanx-hud tema custom (font, posisi, warna)
+- [ ] Wallpaper engine terintegrasi
+- [ ] chanxOS Store (GUI app installer berbasis apt)
 
 ---
 
@@ -295,7 +282,7 @@ MIT License — bebas digunakan, dimodifikasi, dan didistribusikan.
 
 <div align="center">
 
-**chanxOS Project**  ·  dibuat dengan ☕ dan semangat belajar
+**chanxOS Project** · dibuat dengan ☕ dan semangat belajar
 
 *"Build your own OS, understand your own world."*
 
